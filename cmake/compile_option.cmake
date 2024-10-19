@@ -1,0 +1,14 @@
+macro(SET_COMPILE_OPTION)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+	message(STATUS "${FORMATS_MESSAGE} CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}")
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+		add_compile_options("/utf-8")
+		
+		if(LINK_STATIC_RUNTIME_LIBRARIES)
+			SET(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+		endif()
+	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	endif()
+endmacro()

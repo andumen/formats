@@ -1,0 +1,241 @@
+
+# Get started ClangFormt ON Visual Studio :
+#
+#   Method 1. Use Visual Studio Default ClangFormat Supports
+#
+#       s1. Upgrade clang-format.exe to latest version for Visual Studio from site https://llvm.org/builds/
+#           Its not required. The path like:
+#              C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\vcpackages\clang-format.exe
+#
+#       s2.  Visual Studio Menu: Tools - Options - Text Editor - C/C++ - Formatting
+#           Open 'Enable ClangFormat support'
+#           Chose ClangFormat execution 'Run ClangFormat for all formatting scenarios'
+#           Chose Default formatting style 'Google'
+#           Open 'Use custom clang-format.exe', path is your download file.
+#
+#
+#          Format Document (Ctrl+K, Ctrl+D) or Format Selection (Ctrl + K, Ctrl + F)
+#          @see https://devblogs.microsoft.com/cppblog/clangformat-support-in-visual-studio-2017-15-7-preview-1/
+#
+#   Method 2. Use clang-format plugin for Visual Studio
+#
+#       s1. Visual Studio Integration
+#            Download the latest Visual Studio extension from the alpha build site. https://llvm.org/builds/
+#            The default key-binding is Ctrl-R,Ctrl-F.
+#
+#       s2.  Visual Studio Menu: Tools - Options - LLVM/Clang - ClangFormat
+#              Format On Save
+#                  Enable   True
+#              Format Options
+#                  Assume Filename     .clang-format
+#                  Fallback Style      none
+#                  Sort includes       False
+#                  Style               file
+#
+# http://clang.llvm.org/docs/ClangFormat.html
+# http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+#
+
+---
+Language:        Cpp
+# BasedOnStyle:  Google
+
+NamespaceIndentation: None  #  All, None
+ColumnLimit: 100
+
+AccessModifierOffset: -2
+AlignAfterOpenBracket: Align
+
+# 连续赋值时，对齐所有等号
+AlignConsecutiveAssignments: true
+
+# 连续声明时，对齐所有声明的变量名
+AlignConsecutiveDeclarations: true
+AlignEscapedNewlines: Left
+
+# 水平对齐二元和三元表达式的操作数
+AlignOperands:   true
+
+# 对齐连续的尾随的注释
+AlignTrailingComments: true
+
+# 允许函数声明的所有参数放在下一行
+AllowAllArgumentsOnNextLine: true
+
+# 允许构造函数初始化放在下一行
+AllowAllConstructorInitializersOnNextLine: false
+
+# 允许所有声明的参数放在下一行
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# 允许短的块放在同一行
+AllowShortBlocksOnASingleLine: Always
+
+# 允许case放在同一行
+AllowShortCaseLabelsOnASingleLine: true
+
+# 允许短函数放在同一行
+# AllowShortCompoundRequirementOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortLambdasOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: true
+BinPackParameters: false
+BraceWrapping:
+  AfterCaseLabel:  false
+  AfterClass:      true
+  AfterControlStatement: true
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterObjCDeclaration: false
+  AfterStruct:     false
+  AfterUnion:      false
+  AfterExternBlock: false
+  BeforeCatch:     true
+  BeforeElse:      true
+  IndentBraces:    false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakBeforeBinaryOperators: None
+
+# 大括号换行 Custom Allman
+BreakBeforeBraces: Custom
+BreakBeforeInheritanceComma: false
+BreakInheritanceList: BeforeComma
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializersBeforeComma: true
+BreakConstructorInitializers: BeforeComma
+BreakAfterJavaFieldAnnotations: false
+BreakStringLiterals: true
+
+CommentPragmas:  '^ IWYU pragma:'
+CompactNamespaces: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+DisableFormat:   false
+ExperimentalAutoDetectBinPacking: false
+FixNamespaceComments: true
+
+#ForEachMacros:
+#  - foreach
+#  - Q_FOREACH
+#  - BOOST_FOREACH
+#  - FOR
+  
+ForEachMacros:  [ foreach, Q_FOREACH, BOOST_FOREACH ]
+
+IncludeBlocks: Merge
+IncludeCategories:
+  - Regex:           '^<boost/.*\.hpp>'
+    Priority:        3
+  - Regex:           '^<third_party/.*\.h>'
+    Priority:        3
+  - Regex:           '^<baldy/.*\.hpp>'
+    Priority:        3
+  - Regex:           '^<jjwf/.*\.hpp>'
+    Priority:        3
+
+  - Regex:           '^<.*\.h>'
+    Priority:        1
+  - Regex:           '^<ext/.*\.h>'
+    Priority:        2
+  - Regex:           '^<.*'
+    Priority:        2
+  - Regex:           '.*'
+    Priority:        4
+
+IncludeIsMainRegex: '([-_](test|unittest))?$'
+IndentCaseLabels: true
+
+# 预处理指示(PPD-PreProcessor Directive)缩进, 建议None
+# - None: 不缩进
+# - AfterHash: 不缩进, #后面的指示缩进
+# - BeforeHash: 跟前缩进
+IndentPPDirectives: None
+IndentWidth:     2
+IndentWrappedFunctionNames: false
+JavaScriptQuotes: Leave
+JavaScriptWrapImports: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+MacroBlockBegin: ''
+MacroBlockEnd:   ''
+MaxEmptyLinesToKeep: 1
+
+ObjCBinPackProtocolList: Never
+ObjCBlockIndentWidth: 2
+ObjCSpaceAfterProperty: false
+ObjCSpaceBeforeProtocolList: true
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 1
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyBreakTemplateDeclaration: 10
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 200
+PointerAlignment: Left
+RawStringFormats:
+  - Language:        Cpp
+    Delimiters:
+      - cc
+      - CC
+      - cpp
+      - Cpp
+      - CPP
+      - 'c++'
+      - 'C++'
+    CanonicalDelimiter: ''
+    BasedOnStyle:    google
+  - Language:        TextProto
+    Delimiters:
+      - pb
+      - PB
+      - proto
+      - PROTO
+    EnclosingFunctions:
+      - EqualsProto
+      - EquivToProto
+      - PARSE_PARTIAL_TEXT_PROTO
+      - PARSE_TEST_PROTO
+      - PARSE_TEXT_PROTO
+      - ParseTextOrDie
+      - ParseTextProtoOrDie
+    CanonicalDelimiter: ''
+    BasedOnStyle:    google
+ReflowComments:  true
+SortIncludes:    false
+SortUsingDeclarations: true
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 2
+SpacesInAngles:  false
+SpacesInContainerLiterals: true
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard:        Auto
+StatementMacros:
+  - Q_UNUSED
+  - QT_REQUIRE_VERSION
+TabWidth:        4
+UseTab:          Never
+...
+
