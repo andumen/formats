@@ -5,26 +5,26 @@
 The goal of this project is to build a simpler, faster and more user-friendly  parser and serializer for formatted languages.  such as json, yaml .etc.
 
 * [Build](#Build)
-  * [CMake File](#CMake-File)
-  * [CMake Option](#CMake-Option)
+  * [CMake File](#CMake File)
+  * [CMake Option](#CMake Option)
 * [Usage](#Usage)
   * [parse](#parse)
-    * [Read from string or file](#Read-from-string-or-file)
-    * [Parse support](#Parse-support)
+    * [Read from string or file](#Read from string or file)
+    * [Parse support](#Parse support)
   * [stringify](#stringify)
-    * [stringify to string](#stringify-to-string)
-    * [stringify to stream](#stringify-to-string)
-    * [stringify support](#stringify-support)
+    * [stringify to string](#stringify to string)
+    * [stringify to stream](#stringify to string)
+    * [stringify support](#stringify support)
   * [serializer](#serialize/unserialize)
-    * [STL](#STL-Container)
-    * [Custom Type](#Custom-Type)
+    * [STL](#STL Container)
+    * [Custom Type](#Custom Type)
   * [json value](#value)
-    * [Types](#DataType-of-Json-Value)
+    * [Types](#DataType of Json Value)
     * [Construct](#Construct)
     * [Access](#Access)
     * [Capacity](#Capacity)
     * [Modify](#Modify)
-* [Compiler Support](#Compiler-Support)
+* [Compiler Support](#Compiler Support)
 * [Reference](#Reference)
 
 ## Build
@@ -67,22 +67,12 @@ Here are some CMake options that might be helpful to you:
 
 
 
-Finally, yor cmake command may be like this:
+Finally, your cmake command may be like this:
 
 ```
-cmake ../ -G "Visual Studio 15 2017" -A x64 -DWITH_TESTS=ON -DLINK_STATIC_RUNTIME_LIBRARIES=ON
-```
-
-
-
-```
-cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-m64" -DWITH_TESTS=ON
-```
-
-
-
-```
-cmake .. -G "Xcode" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-m64" -DWITH_TESTS=ON
+mkdir build
+cd build
+cmake .. [-G generator] [-DWITH_TESTS=ON|OFF] [-DLINK_STATIC_RUNTIME_LIBRARIES=ON|OFF]
 ```
 
 
