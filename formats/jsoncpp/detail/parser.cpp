@@ -78,7 +78,7 @@ value parser::parse(const char* begin, const char* end, error& error, parse_flag
   value val;
   if (!parse(val))
   {
-    val   = value_type::error;
+    val   = kind::error;
     error = error_;
   }
 
@@ -110,7 +110,7 @@ value parser::parse(std::istream& is, error& error, parse_flag flag)
   value val;
   if (!parse(val))
   {
-    val   = value_type::error;
+    val   = kind::error;
     error = error_;
   }
 
@@ -232,7 +232,7 @@ bool parser::parse_object(value& v)
       return false;
     }
 
-    v.type_ = value_type::object;
+    v.kind_ = kind::object;
     new (&v.data_.v_object_) value::object_t(std::move(object));
 
     skip_multi_bytes(1);
@@ -281,7 +281,7 @@ bool parser::parse_array(value& v)
 
     skip_multi_bytes(1);
 
-    v.type_ = value_type::array;
+    v.kind_ = kind::array;
     new (&v.data_.v_array_) value::array_t(std::move(array));
 
     return true;
@@ -316,7 +316,7 @@ bool parser::parse_value_string(value& v)
   std::string buffer;
   if (parse_string_quoted(buffer))
   {
-    v.type_ = value_type::string;
+    v.kind_ = kind::string;
     new (&v.data_.v_string_) value::string_t(std::move(buffer));
 
     return true;
@@ -337,17 +337,17 @@ bool parser::parse_value_unquoted(value& v)
     {
       if (unlikely(num.is_fraction))
       {
-        v.type_ = value_type::number_float;
+        v.kind_ = kind::number_float;
         new (&v.data_.v_double_) value::number_float_t(num.negative ? -num.fraction : num.fraction);
       }
       else if (num.negative)
       {
-        v.type_ = value_type::number_int;
+        v.kind_ = kind::number_int;
         new (&v.data_.v_int_) value::number_int_t((long long)(~num.integer + 1));
       }
       else
       {
-        v.type_ = value_type::number_uint;
+        v.kind_ = kind::number_uint;
         new (&v.data_.v_uint_) value::number_uint_t(num.integer);
       }
 
@@ -357,7 +357,7 @@ bool parser::parse_value_unquoted(value& v)
 
   if (equal(buffer, "true", 4))
   {
-    v.type_ = value_type::boolean;
+    v.kind_ = kind::boolean;
     new (&v.data_.v_bool_) value::boolean_t(true);
 
     return true;
@@ -365,7 +365,7 @@ bool parser::parse_value_unquoted(value& v)
 
   if (equal(buffer, "false", 5))
   {
-    v.type_ = value_type::boolean;
+    v.kind_ = kind::boolean;
     new (&v.data_.v_bool_) value::boolean_t(false);
 
     return true;
@@ -375,7 +375,7 @@ bool parser::parse_value_unquoted(value& v)
 
   if (parse_nan_num && equal(buffer, "NaN", 3))
   {
-    v.type_ = value_type::number_float;
+    v.kind_ = kind::number_float;
     new (&v.data_.v_double_) value::number_float_t(std::numeric_limits<double>::quiet_NaN());
 
     return true;
@@ -385,7 +385,7 @@ bool parser::parse_value_unquoted(value& v)
   {
     if (equal(buffer, "Infinity", 8) || equal(buffer, "+Infinity", 9))
     {
-      v.type_ = value_type::number_float;
+      v.kind_ = kind::number_float;
       new (&v.data_.v_double_) value::number_float_t(std::numeric_limits<double>::infinity());
 
       return true;
@@ -393,14 +393,14 @@ bool parser::parse_value_unquoted(value& v)
 
     if (equal(buffer, "-Infinity", 9))
     {
-      v.type_ = value_type::number_float;
+      v.kind_ = kind::number_float;
       new (&v.data_.v_double_) value::number_float_t(-std::numeric_limits<double>::infinity());
 
       return true;
     }
   }
 
-  v.type_ = value_type::string;
+  v.kind_ = kind::string;
   new (&v.data_.v_string_) value::string_t(std::move(buffer));
 
   return true;
@@ -433,7 +433,7 @@ bool parser::parse_value_null(value& v)
 {
   if (skip_if_starts_with("null", 4))
   {
-    v.type_ = value_type::null;
+    v.kind_ = kind::null;
     return true;
   }
 
@@ -445,7 +445,7 @@ bool parser::parse_value_true(value& v)
 {
   if (skip_if_starts_with("true", 4))
   {
-    v.type_ = value_type::boolean;
+    v.kind_ = kind::boolean;
     new (&v.data_.v_bool_) value::boolean_t(true);
 
     return true;
@@ -459,7 +459,7 @@ bool parser::parse_value_false(value& v)
 {
   if (skip_if_starts_with("false", 5))
   {
-    v.type_ = value_type::boolean;
+    v.kind_ = kind::boolean;
     new (&v.data_.v_bool_) value::boolean_t(false);
 
     return true;
@@ -582,17 +582,17 @@ bool parser::parse_value_digit(value& v)
 
   if (unlikely(is_fraction))
   {
-    v.type_ = value_type::number_float;
+    v.kind_ = kind::number_float;
     new (&v.data_.v_double_) value::number_float_t(negative ? -fraction : fraction);
   }
   else if (negative)
   {
-    v.type_ = value_type::number_int;
+    v.kind_ = kind::number_int;
     new (&v.data_.v_int_) value::number_int_t((long long)(~integer + 1));
   }
   else
   {
-    v.type_ = value_type::number_uint;
+    v.kind_ = kind::number_uint;
     new (&v.data_.v_uint_) value::number_uint_t(integer);
   }
 
@@ -628,12 +628,12 @@ bool parser::parse_value_hexadecimal(value& v)
 
   if (*begin_ == c_minus_sign)
   {
-    v.type_ = value_type::number_int;
+    v.kind_ = kind::number_int;
     new (&v.data_.v_int_) value::number_int_t((int64_t)(~number + 1));
   }
   else
   {
-    v.type_ = value_type::number_uint;
+    v.kind_ = kind::number_uint;
     new (&v.data_.v_int_) value::number_uint_t(number);
   }
 
@@ -644,7 +644,7 @@ bool parser::parse_value_nan(value& v)
 {
   if (skip_if_starts_with("NaN", 3))
   {
-    v.type_ = value_type::number_float;
+    v.kind_ = kind::number_float;
     new (&v.data_.v_double_) value::number_float_t(std::numeric_limits<double>::quiet_NaN());
 
     return true;
@@ -661,7 +661,7 @@ bool parser::parse_value_infinity(value& v)
     auto inf_val = (*begin_ != c_minus_sign) ? std::numeric_limits<double>::infinity()
                                              : -std::numeric_limits<double>::infinity();
 
-    v.type_ = value_type::number_float;
+    v.kind_ = kind::number_float;
     new (&v.data_.v_double_) value::number_float_t(inf_val);
 
     return true;

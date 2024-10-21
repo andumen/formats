@@ -73,7 +73,7 @@ TEST(JsonValueAssign)
 
   js = container_forward_list;
   CHECK(js.is_array());
-  CHECK(js[1].type() == json::value_type::object);
+  CHECK(js[1].kind() == json::kind::object);
 
   json::value js_array(container_forward_list);
   CHECK(js == js_array);

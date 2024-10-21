@@ -11,7 +11,7 @@ TEST(JsonValueModifierClear)
     json::value jv;
     jv.clear();
 
-    CHECK(jv.type() == json::value_type::null);
+    CHECK(jv.kind() == json::kind::null);
     CHECK(jv == nullptr);
   }
 
@@ -19,7 +19,7 @@ TEST(JsonValueModifierClear)
     json::value jv = true;
     jv.clear();
 
-    CHECK(jv.type() == json::value_type::boolean);
+    CHECK(jv.kind() == json::kind::boolean);
     CHECK(jv == false);
   }
 
@@ -27,7 +27,7 @@ TEST(JsonValueModifierClear)
     json::value jv = std::numeric_limits<uint64_t>::max();
     jv.clear();
 
-    CHECK(jv.type() == json::value_type::number_uint);
+    CHECK(jv.kind() == json::kind::number_uint);
     CHECK(jv == 0);
   }
 
@@ -35,7 +35,7 @@ TEST(JsonValueModifierClear)
     json::value jv = std::numeric_limits<int64_t>::min();
     jv.clear();
 
-    CHECK(jv.type() == json::value_type::number_int);
+    CHECK(jv.kind() == json::kind::number_int);
     CHECK(jv == 0);
   }
 
@@ -43,7 +43,7 @@ TEST(JsonValueModifierClear)
     json::value jv = std::numeric_limits<float>::quiet_NaN();
     jv.clear();
 
-    CHECK(jv.type() == json::value_type::number_float);
+    CHECK(jv.kind() == json::kind::number_float);
     CHECK(jv == 0);
   }
 
@@ -52,42 +52,42 @@ TEST(JsonValueModifierClear)
     // json::value jv("i love coffee");
     jv.clear();
 
-    CHECK(jv.type() == json::value_type::string);
+    CHECK(jv.kind() == json::kind::string);
     CHECK(jv == std::string());
   }
 
   {
-    json::value js_empty_array = json::value_type::array;
+    json::value js_empty_array = json::kind::array;
     js_empty_array.clear();
 
-    CHECK(js_empty_array.type() == json::value_type::array);
-    CHECK(js_empty_array == json::value_type::array);
+    CHECK(js_empty_array.kind() == json::kind::array);
+    CHECK(js_empty_array == json::kind::array);
     CHECK(js_empty_array.size() == 0);
     CHECK(js_empty_array.empty());
 
     json::value js_array = {"111", 2, 3};
     js_array.clear();
 
-    CHECK(js_array.type() == json::value_type::array);
-    CHECK(js_array == json::value_type::array);
+    CHECK(js_array.kind() == json::kind::array);
+    CHECK(js_array == json::kind::array);
     CHECK(js_array.size() == 0);
     CHECK(js_array.empty());
   }
 
   {
-    json::value js_empty_object = json::value_type::object;
+    json::value js_empty_object = json::kind::object;
     js_empty_object.clear();
 
-    CHECK(js_empty_object.type() == json::value_type::object);
-    CHECK(js_empty_object == json::value_type::object);
+    CHECK(js_empty_object.kind() == json::kind::object);
+    CHECK(js_empty_object == json::kind::object);
     CHECK(js_empty_object.size() == 0);
     CHECK(js_empty_object.empty());
 
     json::value js_object = {{"111", 111}, {"2", 2}, {"3", 3}};
     js_object.clear();
 
-    CHECK(js_object.type() == json::value_type::object);
-    CHECK(js_object == json::value_type::object);
+    CHECK(js_object.kind() == json::kind::object);
+    CHECK(js_object == json::kind::object);
     CHECK(js_object.size() == 0);
     CHECK(js_object.empty());
   }
@@ -142,7 +142,7 @@ TEST(JsonValueModifierArrayPushBack)
     jv.push_back("2");
     jv.push_back(*legend_obj);
 
-    CHECK(jv.type() == json::value_type::array);
+    CHECK(jv.kind() == json::kind::array);
     CHECK(jv.size() == 3);
     CHECK(jv == json::value({111, "2", *legend_obj}));
   }
@@ -153,7 +153,7 @@ TEST(JsonValueModifierArrayPushBack)
     jv.push_back("2");
     jv.push_back(*legend_obj);
 
-    CHECK(jv.type() == json::value_type::array);
+    CHECK(jv.kind() == json::kind::array);
     CHECK(jv.size() == 6);
   }
 
@@ -162,7 +162,7 @@ TEST(JsonValueModifierArrayPushBack)
     jv.push_back({"111", "222"});
     jv.push_back({333, 444});
 
-    CHECK(jv.type() == json::value_type::array);
+    CHECK(jv.kind() == json::kind::array);
     CHECK(jv[0] == json::value({"111", "222"}));
     CHECK(jv[1] == json::value({333, 444}));
     CHECK(jv == json::value({{"111", "222"}, {333, 444}}));
@@ -179,7 +179,7 @@ TEST(JsonValueModifierArrayEmplaceBack)
     jv.emplace_back("2");
     jv.emplace_back(*legend_obj);
 
-    CHECK(jv.type() == json::value_type::array);
+    CHECK(jv.kind() == json::kind::array);
     CHECK(jv.size() == 3);
     CHECK(jv == json::value({111, "2", *legend_obj}));
   }
@@ -190,7 +190,7 @@ TEST(JsonValueModifierArrayEmplaceBack)
     jv.emplace_back("2");
     jv.emplace_back(*legend_obj);
 
-    CHECK(jv.type() == json::value_type::array);
+    CHECK(jv.kind() == json::kind::array);
     CHECK(jv.size() == 6);
   }
 }
@@ -254,7 +254,7 @@ TEST(JsonValueArrayModifierInsert)
 
   // json array insert multy val
   {
-    json::value jv = json::value_type::array;
+    json::value jv = json::kind::array;
 
     json::value::iterator iter;
 
@@ -286,7 +286,7 @@ TEST(JsonValueArrayModifierInsert)
 
   // json array insert iterator range
   {
-    json::value jv = json::value_type::array;
+    json::value jv = json::kind::array;
 
     json::value js_array = {"one", "two", "three"};
 
@@ -357,7 +357,7 @@ TEST(JsonValueObjectModifierEmplace)
     CHECK(res2.second == false);
     CHECK(res3.second == true);
 
-    CHECK(jv.type() == json::value_type::object);
+    CHECK(jv.kind() == json::kind::object);
     CHECK(jv == json::value({{"Garen", *legend_obj}, {"Name", "Garen"}}));
   }
 
@@ -371,7 +371,7 @@ TEST(JsonValueObjectModifierEmplace)
     CHECK(res1.second == true);
     CHECK(res2.second == false);
 
-    CHECK(jv.type() == json::value_type::object);
+    CHECK(jv.kind() == json::kind::object);
     CHECK(jv == json::value({{"Name", "Garen"}, {"Garen", *legend_obj}}));
   }
 }

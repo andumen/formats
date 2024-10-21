@@ -114,7 +114,7 @@ inline void PrintfValue(const std::string& s)
 }
 
 template <>
-inline void PrintfValue(formats::json::value_type x)
+inline void PrintfValue(formats::json::kind x)
 {
   printf("%d", (int)x);
 }

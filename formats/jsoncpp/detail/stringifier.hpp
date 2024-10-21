@@ -75,16 +75,16 @@ private:
   {
     std::string value_str;
 
-    switch (v.type())
+    switch (v.kind())
     {
-      case value_type::string:
+      case kind::string:
         value_str.append(quote_mark).append(v.as_string()).append(quote_mark);
         break;
-      case value_type::number_int: value_str.assign(std::to_string(v.as_int64())); break;
-      case value_type::number_uint: value_str.assign(std::to_string(v.as_uint64())); break;
-      case value_type::number_float: value_str = double_to_string(v); break;
-      case value_type::boolean: value_str.assign(v.as_bool() ? "true" : "false"); break;
-      case value_type::null: value_str.assign("null");
+      case kind::number_int: value_str.assign(std::to_string(v.as_int64())); break;
+      case kind::number_uint: value_str.assign(std::to_string(v.as_uint64())); break;
+      case kind::number_float: value_str = double_to_string(v); break;
+      case kind::boolean: value_str.assign(v.as_bool() ? "true" : "false"); break;
+      case kind::null: value_str.assign("null");
       default: break;
     }
 

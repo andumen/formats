@@ -17,14 +17,14 @@ bool parse(value& jv, const char* begin, const char* end, parse_flag flag)
   error err;
   jv = parse(begin, end, err, flag);
 
-  return (jv.type() == json::value_type::error);
+  return (jv.kind() == json::kind::error);
 }
 
 bool parse(value& jv, const char* begin, std::size_t len, parse_flag flag)
 {
   jv = parse(begin, begin + len, flag);
 
-  return (jv.type() == json::value_type::error);
+  return (jv.kind() == json::kind::error);
 }
 
 bool parse(value& jv, std::istream& is, parse_flag flag)
@@ -32,7 +32,7 @@ bool parse(value& jv, std::istream& is, parse_flag flag)
   error err;
   jv = parse(is, err, flag);
 
-  return (jv.type() == json::value_type::error);
+  return (jv.kind() == json::kind::error);
 }
 
 value parse(const char* data, parse_flag flag)
@@ -46,7 +46,7 @@ value parse(const char* begin, const char* end, parse_flag flag)
   auto  res = parse(begin, end, err, flag);
 
 #ifdef THROW_PARSE_ERROR
-  if (res.type() == json::value_type::error) { FORMATS_THROW(parse_except::create(err.what())); }
+  if (res.kind() == json::kind::error) { FORMATS_THROW(parse_except::create(err.what())); }
 #endif  // THROW_PARSE_ERROR
 
   return res;
@@ -63,7 +63,7 @@ value parse(std::istream& is, parse_flag flag)
   auto  res = parse(is, err, flag);
 
 #ifdef THROW_PARSE_ERROR
-  if (res.type() == json::value_type::error) { FORMATS_THROW(parse_except::create(err.what())); }
+  if (res.kind() == json::kind::error) { FORMATS_THROW(parse_except::create(err.what())); }
 #endif  // THROW_PARSE_ERROR
 
   return false;

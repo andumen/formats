@@ -137,7 +137,7 @@ struct serializer<
     typename std::enable_if<formats::detail::is_unmapped_traversable_container_v<T>>::type> {
   static value to_json(const T& t)
   {
-    json::value result = json::value_type::array;
+    json::value result = json::kind::array;
 
     for (const auto& element : t)
     {
@@ -155,7 +155,7 @@ struct serializer<T,
                       std::is_constructible<std::string, typename T::key_type>::value>::type> {
   static value to_json(const T& t)
   {
-    json::value result = json::value_type::object;
+    json::value result = json::kind::object;
 
     for (const auto& entry : t)
     {
@@ -189,7 +189,7 @@ FORMATS_JSON_NAMESPACE_END
   struct formats::adl_serializer<Struct> {                                                    \
     inline static json::value to_json(const Struct& t)                                        \
     {                                                                                         \
-      json::value v = json::value_type::object;                                               \
+      json::value v = json::kind::object;                                                     \
       formats::ForEachField(t, [&v](auto&& field, auto&& name) { v[name] = field; });         \
       return v;                                                                               \
     }                                                                                         \
@@ -207,7 +207,7 @@ FORMATS_JSON_NAMESPACE_END
   struct formats::adl_serializer<Struct> {                                            \
     inline static json::value to_json(const Struct& t)                                \
     {                                                                                 \
-      json::value v = json::value_type::object;                                       \
+      json::value v = json::kind::object;                                             \
       formats::ForEachField(t, [&v](auto&& field, auto&& name) { v[name] = field; }); \
       return v;                                                                       \
     }                                                                                 \

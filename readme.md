@@ -206,7 +206,7 @@ int main() {
     if (is.is_open()) {
       json::value json_value = formats::json::parse(is);
 
-      if (json_value.type() != json::value_type::error) {
+      if (json_value.kind() != json::kind::error) {
         // do someting
       }
     }
@@ -524,7 +524,8 @@ The value is the core class of the project. This library provides simple access 
 The following are json data types:
 
 ```c++
-enum class value_type : char
+/* json value type */
+enum class kind : unsigned char
 {
   error = 0,     // error. only has effect when parse failed.
   null,          // null value. corresponding nullptr
@@ -545,7 +546,7 @@ enum class value_type : char
 ##### From Json Value Type
 
 ```c++
-json::value json_value = json::value_type::array;
+json::value json_value = json::kind::array;
 ```
 
 ##### From Scaler value
@@ -618,7 +619,7 @@ json::value jv_object4(unordered_multimap);
 
 ##### value accessors
 
-| Type         | type checker | pointer access | checked access | convert access |
+| Kind         | kind checker | pointer access | checked access | convert access |
 | ------------ | ------------ | -------------- | -------------- | -------------- |
 | null         | is_null      | **None**       | **None**       | **None**       |
 | boolean      | is_bool      | if_bool        | as_bool        | to_bool        |
@@ -633,10 +634,10 @@ json::value jv_object4(unordered_multimap);
 
 **Description**
 
-* `if_type`:  check this value is certain type
-* `if_type`:  return a pointer if this is certain type, else return nullptr
-* `as_type`:  return a reference to the underlying value if this is certain type, else throw an exception
-* `to_type`:  return value if convert this value to certain type success, else dflt
+* `if_${kind}`:  check this value is certain kind
+* `if_${kind}`:  return a pointer if this is certain kind, else return nullptr
+* `as_${kind}`:  return a reference to the underlying value if this is certain kind, else throw an exception
+* `to_${kind}`:  return value if convert this value to certain kind success, else dflt
 
 
 
@@ -801,7 +802,7 @@ auto size = jv.size();    // size = 3
 
 ***
 
-* `emplace_type`: repalce the value whit specified type initialized to default value, return the reference of the underlying content
+* `emplace_${kind}`: repalce the value whit specified kind initialized to default value, return the reference of the underlying content
 * `swap`: exchanges the contents of this value with those of other
 * `clear`: reset to default value. don't change type
 

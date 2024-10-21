@@ -5,7 +5,7 @@ TEST(JsonValueExceptionAsType)
 {
   // as bool
   {
-    json::value jv = json::value_type::object;
+    json::value jv = json::kind::object;
     try
     {
       jv.as_bool();
@@ -19,7 +19,7 @@ TEST(JsonValueExceptionAsType)
   // as int
   {
     // type exception
-    json::value jv1 = json::value_type::object;
+    json::value jv1 = json::kind::object;
     try
     {
       jv1.as_int64();
@@ -44,7 +44,7 @@ TEST(JsonValueExceptionAsType)
   // as uint
   {
     // type exception
-    json::value jv1 = json::value_type::object;
+    json::value jv1 = json::kind::object;
     try
     {
       jv1.as_uint64();

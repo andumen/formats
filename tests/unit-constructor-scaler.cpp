@@ -10,42 +10,42 @@ TEST(ConstructFromType)
   {
     // none json
     {
-      CHECK_EQ(json::value().type(), json::value_type::null);
-      CHECK_EQ(json::value(json::value_type::null).type(), json::value_type::null);
+      CHECK_EQ(json::value().kind(), json::kind::null);
+      CHECK_EQ(json::value(json::kind::null).kind(), json::kind::null);
 
-      CHECK(json::value(json::value_type::null) == nullptr);
+      CHECK(json::value(json::kind::null) == nullptr);
     }
 
     // bool json
     {
-      CHECK_EQ(json::value(json::value_type::boolean).type(), json::value_type::boolean);
-      CHECK(json::value(json::value_type::boolean) == false);
+      CHECK_EQ(json::value(json::kind::boolean).kind(), json::kind::boolean);
+      CHECK(json::value(json::kind::boolean) == false);
     }
 
     // number
     {
-      CHECK_EQ(json::value(json::value_type::number_int).type(), json::value_type::number_int);
-      CHECK_EQ(json::value(json::value_type::number_uint).type(), json::value_type::number_uint);
-      CHECK_EQ(json::value(json::value_type::number_float).type(), json::value_type::number_float);
+      CHECK_EQ(json::value(json::kind::number_int).kind(), json::kind::number_int);
+      CHECK_EQ(json::value(json::kind::number_uint).kind(), json::kind::number_uint);
+      CHECK_EQ(json::value(json::kind::number_float).kind(), json::kind::number_float);
 
-      CHECK(json::value(json::value_type::number_int) == 0);
-      CHECK(json::value(json::value_type::number_uint) == 0);
-      CHECK(json::value(json::value_type::number_float) == 0.0);
+      CHECK(json::value(json::kind::number_int) == 0);
+      CHECK(json::value(json::kind::number_uint) == 0);
+      CHECK(json::value(json::kind::number_float) == 0.0);
     }
 
     // string
     {
-      CHECK_EQ(json::value(json::value_type::string).type(), json::value_type::string);
-      CHECK(json::value(json::value_type::string) == "");
+      CHECK_EQ(json::value(json::kind::string).kind(), json::kind::string);
+      CHECK(json::value(json::kind::string) == "");
     }
 
     // array
     {
-      CHECK_EQ(json::value(json::value_type::array).type(), json::value_type::array);
+      CHECK_EQ(json::value(json::kind::array).kind(), json::kind::array);
     }
     // object
     {
-      CHECK_EQ(json::value(json::value_type::object).type(), json::value_type::object);
+      CHECK_EQ(json::value(json::kind::object).kind(), json::kind::object);
     }
   }
 }

@@ -19,7 +19,7 @@
 FORMATS_JSON_NAMESPACE_BEGIN
 
 /* json value type */
-enum class value_type : unsigned char
+enum class kind : unsigned char
 {
   error = 0,     // error. only has effect when parse failed.
   null,          // null value. corresponding nullptr
@@ -60,11 +60,11 @@ public:
   value() noexcept;
   value(const value& value) noexcept;
   value(value&& value) noexcept;
-  value(value_type) noexcept;
+  value(kind) noexcept;
 
   template <typename T, typename std::enable_if<std::is_same<T, bool>::value>::type* = nullptr>
   inline value(T val)
-      : type_(value_type::boolean)
+      : kind_(kind::boolean)
       , data_(val)
   {}
 
@@ -106,7 +106,7 @@ public:
                               int>::type = 0>
   value(const Pair& pair) noexcept
   {
-    type_ = value_type::object;
+    kind_ = kind::object;
     new (&data_.v_object_) object_t();
 
     data_.v_object_.emplace(pair.first, value(pair.second));
@@ -124,7 +124,7 @@ public:
           std::is_constructible<value, typename Container::value_type>::value>::type* = nullptr>
   value(const Container& container) noexcept
   {
-    type_ = value_type::array;
+    kind_ = kind::array;
     new (&data_.v_array_) array_t();
 
     for (const typename Container::value_type& element : container)
@@ -145,7 +145,7 @@ public:
           std::is_constructible<value, typename Container::mapped_type>::value>::type* = nullptr>
   value(const Container& container) noexcept
   {
-    type_ = value_type::object;
+    kind_ = kind::object;
     new (&data_.v_object_) object_t();
 
     for (const typename Container::value_type& entry : container)
@@ -176,7 +176,7 @@ public:
 
   value& operator=(const value& val) noexcept;
   value& operator=(value&& val) noexcept;
-  value& operator=(value_type) noexcept;
+  value& operator=(json::kind) noexcept;
 
   template <typename T, typename std::enable_if<std::is_same<T, bool>::value>::type* = nullptr>
   inline value& operator=(T val) noexcept
@@ -271,7 +271,7 @@ public:
   string_t       to_string(string_t&& dflt = {}) const noexcept;
 
 public:
-  value_type type() const noexcept;
+  kind kind() const noexcept;
 
 public:
   template <
@@ -559,7 +559,7 @@ public:  // Modifier
   template <typename... Args>
   std::pair<iterator, bool> emplace(Args&&... args) noexcept(false)
   {
-    set_type_if_none(value_type::object);
+    set_type_if_none(kind::object);
     if (is_object())
     {
       auto ret = data_.v_object_.emplace(std::forward<Args&&>(args)...);
@@ -673,7 +673,7 @@ public:  // Modifier
   template <typename... Args>
   reference emplace_back(Args&&... args) noexcept(false)
   {
-    set_type_if_none(value_type::array);
+    set_type_if_none(kind::array);
 
     if (is_array()) { return data_.v_array_.emplace_back(std::forward<Args&&>(args)...); }
 
@@ -712,7 +712,7 @@ public:
 
 private:
   void destory() noexcept;
-  void set_type_if_none(value_type) noexcept;
+  void set_type_if_none(json::kind) noexcept;
 
   template <typename... Args>
   iterator insert_iterator_to_array(const_iterator pos, Args&&... args)
@@ -737,7 +737,7 @@ private:
   string_t type_name() const noexcept;
 
 private:
-  value_type type_ = value_type::null;
+  json::kind kind_ = kind::null;
 
 protected:
   union json_data {

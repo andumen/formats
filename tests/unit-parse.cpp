@@ -21,13 +21,13 @@ TEST(JsonValueParseFromString)
 
     auto jv = json::parse(s.c_str(), s.size());
 
-    CHECK(jv.type() == json::value_type::array);
+    CHECK(jv.kind() == json::kind::array);
     CHECK(jv.size() == 5);
     CHECK(jv[2] == "2");
   }
 
   {
-    json::value jv_source = json::value_type::object;
+    json::value jv_source = json::kind::object;
     jv_source["one"]      = 1;
     jv_source["two"]      = 2;
     jv_source["ten"]      = 10;
@@ -49,7 +49,7 @@ TEST(JsonValueParseFromString)
 
     auto jv = json::parse(s.c_str(), s.size(), json::parse_flag::JSON5);
 
-    CHECK(jv.type() == json::value_type::array);
+    CHECK(jv.kind() == json::kind::array);
     CHECK(jv.size() == 5);
     CHECK(jv[2] == "2");
   }

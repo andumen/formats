@@ -43,11 +43,11 @@ TEST(ConstructFromSequenceContainer)
 
   js_array = container_deque;
   CHECK(js_array.is_array());
-  CHECK(js_array[1].type() == json::value_type::number_float);
+  CHECK(js_array[1].kind() == json::kind::number_float);
 
   js_array = container_forward_list;
   CHECK(js_array.is_array());
-  CHECK(js_array[1].type() == json::value_type::object);
+  CHECK(js_array[1].kind() == json::kind::object);
 }
 
 TEST(ConstructFromAssociationContainer)

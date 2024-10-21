@@ -10,24 +10,22 @@
 FORMATS_JSON_NAMESPACE_BEGIN
 
 value::value() noexcept
-    : type_(value_type::null)
+    : kind_(kind::null)
 {}
 
 value::value(const value& other) noexcept
-    : type_(other.type_)
+    : kind_(other.kind_)
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::boolean: new (&data_.v_bool_) bool(other.data_.v_bool_); break;
-    case value_type::string: new (&data_.v_string_) string_t(other.data_.v_string_); break;
-    case value_type::number_int: new (&data_.v_int_) number_uint_t(other.data_.v_int_); break;
-    case value_type::number_uint: new (&data_.v_uint_) number_uint_t(other.data_.v_uint_); break;
-    case value_type::number_float:
-      new (&data_.v_double_) number_float_t(other.data_.v_double_);
-      break;
-    case value_type::array: new (&data_.v_array_) array_t(other.data_.v_array_); break;
-    case value_type::object: new (&data_.v_object_) object_t(other.data_.v_object_); break;
-    case value_type::error:
+    case kind::boolean: new (&data_.v_bool_) bool(other.data_.v_bool_); break;
+    case kind::string: new (&data_.v_string_) string_t(other.data_.v_string_); break;
+    case kind::number_int: new (&data_.v_int_) number_uint_t(other.data_.v_int_); break;
+    case kind::number_uint: new (&data_.v_uint_) number_uint_t(other.data_.v_uint_); break;
+    case kind::number_float: new (&data_.v_double_) number_float_t(other.data_.v_double_); break;
+    case kind::array: new (&data_.v_array_) array_t(other.data_.v_array_); break;
+    case kind::object: new (&data_.v_object_) object_t(other.data_.v_object_); break;
+    case kind::error:
       // new (&data_.v_error_) error(other.data_.v_error_);
       break;
 
@@ -36,24 +34,18 @@ value::value(const value& other) noexcept
 }
 
 value::value(value&& other) noexcept
-    : type_(other.type_)
+    : kind_(other.kind_)
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::boolean: new (&data_.v_bool_) bool(other.data_.v_bool_); break;
-    case value_type::string:
-      new (&data_.v_string_) string_t(std::move(other.data_.v_string_));
-      break;
-    case value_type::number_int: new (&data_.v_int_) number_int_t(other.data_.v_int_); break;
-    case value_type::number_uint: new (&data_.v_uint_) number_uint_t(other.data_.v_uint_); break;
-    case value_type::number_float:
-      new (&data_.v_double_) number_float_t(other.data_.v_double_);
-      break;
-    case value_type::array: new (&data_.v_array_) array_t(std::move(other.data_.v_array_)); break;
-    case value_type::object:
-      new (&data_.v_object_) object_t(std::move(other.data_.v_object_));
-      break;
-    case value_type::error:  // new (&data_.v_error_) error(std::move(other.data_.v_error_)); break;
+    case kind::boolean: new (&data_.v_bool_) bool(other.data_.v_bool_); break;
+    case kind::string: new (&data_.v_string_) string_t(std::move(other.data_.v_string_)); break;
+    case kind::number_int: new (&data_.v_int_) number_int_t(other.data_.v_int_); break;
+    case kind::number_uint: new (&data_.v_uint_) number_uint_t(other.data_.v_uint_); break;
+    case kind::number_float: new (&data_.v_double_) number_float_t(other.data_.v_double_); break;
+    case kind::array: new (&data_.v_array_) array_t(std::move(other.data_.v_array_)); break;
+    case kind::object: new (&data_.v_object_) object_t(std::move(other.data_.v_object_)); break;
+    case kind::error:  // new (&data_.v_error_) error(std::move(other.data_.v_error_)); break;
 
     default: break;
   }
@@ -61,19 +53,19 @@ value::value(value&& other) noexcept
   other.destory();
 }
 
-value::value(value_type type) noexcept
-    : type_(type)
+value::value(json::kind kind) noexcept
+    : kind_(kind)
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::boolean: new (&data_.v_bool_) bool(false); break;
-    case value_type::string: new (&data_.v_string_) string_t{}; break;
-    case value_type::number_int: new (&data_.v_int_) number_uint_t(0); break;
-    case value_type::number_uint: new (&data_.v_uint_) number_int_t(0); break;
-    case value_type::number_float: new (&data_.v_double_) number_float_t(0.0); break;
-    case value_type::array: new (&data_.v_array_) array_t{}; break;
-    case value_type::object: new (&data_.v_object_) object_t{}; break;
-    case value_type::error:
+    case kind::boolean: new (&data_.v_bool_) bool(false); break;
+    case kind::string: new (&data_.v_string_) string_t{}; break;
+    case kind::number_int: new (&data_.v_int_) number_uint_t(0); break;
+    case kind::number_uint: new (&data_.v_uint_) number_int_t(0); break;
+    case kind::number_float: new (&data_.v_double_) number_float_t(0.0); break;
+    case kind::array: new (&data_.v_array_) array_t{}; break;
+    case kind::object: new (&data_.v_object_) object_t{}; break;
+    case kind::error:
       // new (&data_.v_error_) error(other.data_.v_error_);
       break;
 
@@ -82,119 +74,119 @@ value::value(value_type type) noexcept
 }
 
 value::value(std::nullptr_t) noexcept
-    : type_(value_type::null)
+    : kind_(kind::null)
 {}
 
 value::value(float v) noexcept
-    : type_(value_type::number_float)
+    : kind_(kind::number_float)
 {
   new (&data_.v_double_) number_float_t(v);
 }
 
 value::value(double v) noexcept
-    : type_(value_type::number_float)
+    : kind_(kind::number_float)
 {
   new (&data_.v_double_) number_float_t(v);
 }
 
 value::value(signed char v) noexcept
-    : type_(value_type::number_int)
+    : kind_(kind::number_int)
 {
   new (&data_.v_int_) int64_t(v);
 }
 
 value::value(signed short v) noexcept
-    : type_(value_type::number_int)
+    : kind_(kind::number_int)
 {
   new (&data_.v_int_) int64_t(v);
 }
 
 value::value(signed int v) noexcept
-    : type_(value_type::number_int)
+    : kind_(kind::number_int)
 {
   new (&data_.v_int_) int64_t(v);
 }
 
 value::value(signed long v) noexcept
-    : type_(value_type::number_int)
+    : kind_(kind::number_int)
 {
   new (&data_.v_int_) int64_t(v);
 }
 
 value::value(signed long long v) noexcept
-    : type_(value_type::number_int)
+    : kind_(kind::number_int)
 {
   new (&data_.v_int_) int64_t(v);
 }
 
 value::value(unsigned char v) noexcept
-    : type_(value_type::number_uint)
+    : kind_(kind::number_uint)
 {
   new (&data_.v_uint_) uint64_t(v);
 }
 
 value::value(unsigned short v) noexcept
-    : type_(value_type::number_uint)
+    : kind_(kind::number_uint)
 {
   new (&data_.v_uint_) uint64_t(v);
 }
 
 value::value(unsigned int v) noexcept
-    : type_(value_type::number_uint)
+    : kind_(kind::number_uint)
 {
   new (&data_.v_uint_) uint64_t(v);
 }
 
 value::value(unsigned long v) noexcept
-    : type_(value_type::number_uint)
+    : kind_(kind::number_uint)
 {
   new (&data_.v_uint_) uint64_t(v);
 }
 
 value::value(unsigned long long v) noexcept
-    : type_(value_type::number_uint)
+    : kind_(kind::number_uint)
 {
   new (&data_.v_uint_) uint64_t(v);
 }
 
 value::value(const string_t& v) noexcept
-    : type_(value_type::string)
+    : kind_(kind::string)
 {
   new (&data_.v_string_) string_t(v);
 }
 
 value::value(string_t&& v) noexcept
-    : type_(value_type::string)
+    : kind_(kind::string)
 {
   new (&data_.v_string_) string_t(std::move(v));
 }
 
 value::value(const char* v) noexcept
-    : type_(value_type::string)
+    : kind_(kind::string)
 {
   new (&data_.v_string_) string_t(v);
 }
 
 value::value(const array_t& v) noexcept
-    : type_(value_type::array)
+    : kind_(kind::array)
 {
   new (&data_.v_array_) array_t(v);
 }
 
 value::value(array_t&& v) noexcept
-    : type_(value_type::array)
+    : kind_(kind::array)
 {
   new (&data_.v_array_) array_t(std::move(v));
 }
 
 value::value(const object_t& v) noexcept
-    : type_(value_type::object)
+    : kind_(kind::object)
 {
   new (&data_.v_object_) object_t(v);
 }
 
 value::value(object_t&& v) noexcept
-    : type_(value_type::object)
+    : kind_(kind::object)
 {
   new (&data_.v_object_) object_t(std::move(v));
 }
@@ -209,7 +201,7 @@ value::value(initializer_list_t init_list) noexcept
     {
       value v = other[static_cast<size_type>(1)];
 
-      type_ = value_type::object;
+      kind_ = kind::object;
       new (&data_.v_object_) object_t();
       data_.v_object_.emplace(other[static_cast<size_type>(0)].as_string(), v);
 
@@ -226,7 +218,7 @@ value::value(initializer_list_t init_list) noexcept
 
   if (is_object)
   {
-    type_ = value_type::object;
+    kind_ = kind::object;
     new (&data_.v_object_) object_t();
 
     for (auto& value_ref : init_list)
@@ -238,7 +230,7 @@ value::value(initializer_list_t init_list) noexcept
   }
   else
   {
-    type_ = value_type::array;
+    kind_ = kind::array;
     new (&data_.v_array_) array_t();
 
     for (auto& value_ref : init_list)
@@ -257,25 +249,23 @@ value& value::operator=(const value& other) noexcept
 {
   this->destory();
 
-  switch (other.type_)
+  switch (other.kind_)
   {
-    case value_type::boolean: new (&data_.v_bool_) bool(other.data_.v_bool_); break;
-    case value_type::string: new (&data_.v_string_) string_t(other.data_.v_string_); break;
-    case value_type::number_int: new (&data_.v_int_) int64_t(other.data_.v_int_); break;
-    case value_type::number_uint: new (&data_.v_uint_) uint64_t(other.data_.v_uint_); break;
-    case value_type::number_float:
-      new (&data_.v_double_) number_float_t(other.data_.v_double_);
-      break;
-    case value_type::array: new (&data_.v_array_) array_t(other.data_.v_array_); break;
-    case value_type::object: new (&data_.v_object_) object_t(other.data_.v_object_); break;
-    case value_type::error:
+    case kind::boolean: new (&data_.v_bool_) bool(other.data_.v_bool_); break;
+    case kind::string: new (&data_.v_string_) string_t(other.data_.v_string_); break;
+    case kind::number_int: new (&data_.v_int_) int64_t(other.data_.v_int_); break;
+    case kind::number_uint: new (&data_.v_uint_) uint64_t(other.data_.v_uint_); break;
+    case kind::number_float: new (&data_.v_double_) number_float_t(other.data_.v_double_); break;
+    case kind::array: new (&data_.v_array_) array_t(other.data_.v_array_); break;
+    case kind::object: new (&data_.v_object_) object_t(other.data_.v_object_); break;
+    case kind::error:
       // new (&data_.v_error_) error(std::move(other.data_.v_error_));
       break;
 
     default: break;
   }
 
-  this->type_ = other.type_;
+  this->kind_ = other.kind_;
 
   return *this;
 }
@@ -284,37 +274,31 @@ value& value::operator=(value&& other) noexcept
 {
   this->destory();
 
-  switch (other.type_)
+  switch (other.kind_)
   {
-    case value_type::boolean: new (&data_.v_bool_) bool(other.data_.v_bool_); break;
-    case value_type::string:
-      new (&data_.v_string_) string_t(std::move(other.data_.v_string_));
-      break;
-    case value_type::number_int: new (&data_.v_int_) int64_t(other.data_.v_int_); break;
-    case value_type::number_uint: new (&data_.v_uint_) uint64_t(other.data_.v_uint_); break;
-    case value_type::number_float:
-      new (&data_.v_double_) number_float_t(other.data_.v_double_);
-      break;
-    case value_type::array: new (&data_.v_array_) array_t(std::move(other.data_.v_array_)); break;
-    case value_type::object:
-      new (&data_.v_object_) object_t(std::move(other.data_.v_object_));
-      break;
-    case value_type::error:
+    case kind::boolean: new (&data_.v_bool_) bool(other.data_.v_bool_); break;
+    case kind::string: new (&data_.v_string_) string_t(std::move(other.data_.v_string_)); break;
+    case kind::number_int: new (&data_.v_int_) int64_t(other.data_.v_int_); break;
+    case kind::number_uint: new (&data_.v_uint_) uint64_t(other.data_.v_uint_); break;
+    case kind::number_float: new (&data_.v_double_) number_float_t(other.data_.v_double_); break;
+    case kind::array: new (&data_.v_array_) array_t(std::move(other.data_.v_array_)); break;
+    case kind::object: new (&data_.v_object_) object_t(std::move(other.data_.v_object_)); break;
+    case kind::error:
       // new (&data_.v_error_) error(std::move(other.data_.v_error_));
       break;
 
     default: break;
   }
 
-  this->type_ = other.type_;
+  this->kind_ = other.kind_;
 
   other.destory();
   return *this;
 }
 
-value& value::operator=(value_type type) noexcept
+value& value::operator=(json::kind kind) noexcept
 {
-  value(type).swap(*this);
+  value(kind).swap(*this);
   return *this;
 }
 
@@ -501,53 +485,52 @@ const value::object_t* value::if_object() const noexcept
 
 bool value::is_bool() const noexcept
 {
-  return type_ == value_type::boolean;
+  return kind_ == kind::boolean;
 }
 
 bool value::is_null() const noexcept
 {
-  return type_ == value_type::null;
+  return kind_ == kind::null;
 }
 
 bool value::is_int64() const noexcept
 {
-  return type_ == value_type::number_int;
+  return kind_ == kind::number_int;
 }
 
 bool value::is_uint64() const noexcept
 {
-  return type_ == value_type::number_uint;
+  return kind_ == kind::number_uint;
 }
 
 bool value::is_double() const noexcept
 {
-  return type_ == value_type::number_float;
+  return kind_ == kind::number_float;
 }
 
 bool value::is_string() const noexcept
 {
-  return type_ == value_type::string;
+  return kind_ == kind::string;
 }
 
 bool value::is_array() const noexcept
 {
-  return type_ == value_type::array;
+  return kind_ == kind::array;
 }
 
 bool value::is_object() const noexcept
 {
-  return type_ == value_type::object;
+  return kind_ == kind::object;
 }
 
 bool value::is_number() const noexcept
 {
-  return (type_ == value_type::number_int || type_ == value_type::number_uint ||
-          type_ == value_type::number_float);
+  return (kind_ == kind::number_int || kind_ == kind::number_uint || kind_ == kind::number_float);
 }
 
 bool value::is_error() const noexcept
 {
-  return type_ == value_type::error;
+  return kind_ == kind::error;
 }
 
 bool& value::as_bool() noexcept(false)
@@ -634,13 +617,13 @@ const value::object_t& value::as_object() const noexcept(false)
 
 bool value::to_bool(bool dflt) const noexcept
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::boolean: return data_.v_bool_;
-    case value_type::number_int: return data_.v_int_ != 0;
-    case value_type::number_uint: return data_.v_uint_ != 0;
-    case value_type::number_float: return data_.v_double_ != 0.0;
-    case value_type::string:
+    case kind::boolean: return data_.v_bool_;
+    case kind::number_int: return data_.v_int_ != 0;
+    case kind::number_uint: return data_.v_uint_ != 0;
+    case kind::number_float: return data_.v_double_ != 0.0;
+    case kind::string:
       return !data_.v_string_.empty() && !equal(toupper(data_.v_string_), "FALSE", 5);
 
     default: break;
@@ -651,23 +634,23 @@ bool value::to_bool(bool dflt) const noexcept
 
 value::number_int_t value::to_int64(value::number_int_t dflt) const noexcept
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::number_int: return data_.v_int_;
+    case kind::number_int: return data_.v_int_;
 
-    case value_type::number_uint:
+    case kind::number_uint:
       return (data_.v_uint_ <= (std::numeric_limits<number_int_t>::max)())
                  ? (number_int_t)data_.v_uint_
                  : dflt;
 
-    case value_type::number_float:
+    case kind::number_float:
       return (data_.v_double_ >= (std::numeric_limits<number_int_t>::min)() &&
               data_.v_double_ <= (std::numeric_limits<number_int_t>::max)())
                  ? (number_int_t)data_.v_double_
                  : dflt;
 
-    case value_type::boolean: return data_.v_bool_ ? 1 : 0;
-    case value_type::string: {
+    case kind::boolean: return data_.v_bool_ ? 1 : 0;
+    case kind::string: {
       auto result = strtoll(data_.v_string_);
       if (result.second) return result.first;
     }
@@ -680,18 +663,18 @@ value::number_int_t value::to_int64(value::number_int_t dflt) const noexcept
 
 value::number_uint_t value::to_uint64(value::number_uint_t dflt) const noexcept
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::number_uint: return data_.v_uint_;
-    case value_type::number_int: return data_.v_int_ >= 0 ? (number_uint_t)data_.v_int_ : dflt;
-    case value_type::number_float:
+    case kind::number_uint: return data_.v_uint_;
+    case kind::number_int: return data_.v_int_ >= 0 ? (number_uint_t)data_.v_int_ : dflt;
+    case kind::number_float:
       return (data_.v_double_ >= 0.0 &&
               data_.v_double_ <= (std::numeric_limits<number_uint_t>::max)())
                  ? (number_uint_t)data_.v_double_
                  : dflt;
 
-    case value_type::boolean: return data_.v_bool_ ? 1 : 0;
-    case value_type::string: {
+    case kind::boolean: return data_.v_bool_ ? 1 : 0;
+    case kind::string: {
       auto result = strtoull(data_.v_string_);
       if (result.second) return result.first;
     }
@@ -704,13 +687,13 @@ value::number_uint_t value::to_uint64(value::number_uint_t dflt) const noexcept
 
 double value::to_double(double dflt) const noexcept
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::number_float: return data_.v_double_;
-    case value_type::number_uint: return (number_float_t)data_.v_uint_;
-    case value_type::number_int: return (number_float_t)data_.v_int_;
-    case value_type::boolean: return (number_float_t)data_.v_bool_;
-    case value_type::string: {
+    case kind::number_float: return data_.v_double_;
+    case kind::number_uint: return (number_float_t)data_.v_uint_;
+    case kind::number_int: return (number_float_t)data_.v_int_;
+    case kind::boolean: return (number_float_t)data_.v_bool_;
+    case kind::string: {
       auto result = strtod(data_.v_string_);
       if (result.second) return result.first;
     }
@@ -723,23 +706,23 @@ double value::to_double(double dflt) const noexcept
 
 value::string_t value::to_string(string_t&& dflt) const noexcept
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::string: return data_.v_string_;
-    case value_type::number_int: return std::to_string(data_.v_int_);
-    case value_type::number_uint: return std::to_string(data_.v_uint_);
-    case value_type::number_float: return dtoa(data_.v_double_);
-    case value_type::boolean: return data_.v_bool_ ? "true" : "false";
-    case value_type::null: return "null";
+    case kind::string: return data_.v_string_;
+    case kind::number_int: return std::to_string(data_.v_int_);
+    case kind::number_uint: return std::to_string(data_.v_uint_);
+    case kind::number_float: return dtoa(data_.v_double_);
+    case kind::boolean: return data_.v_bool_ ? "true" : "false";
+    case kind::null: return "null";
     default: break;
   }
 
   return dflt;
 }
 
-value_type value::type() const noexcept
+json::kind value::kind() const noexcept
 {
-  return type_;
+  return kind_;
 }
 
 value::string_t value::type_name() const noexcept
@@ -747,7 +730,7 @@ value::string_t value::type_name() const noexcept
   const char* types_name[] = {"error",        "null",   "boolean", "number_int", "number_uint",
                               "number_float", "string", "array",   "object"};
 
-  return types_name[(int)type_];
+  return types_name[(int)kind_];
 }
 
 value::string_t value::get(const char* key, string_t dflt) const noexcept
@@ -981,19 +964,19 @@ value::const_reference value::at(size_type pos) const noexcept(false)
 
 bool value::operator==(const value& other) const noexcept
 {
-  if (type_ == other.type_)
+  if (kind_ == other.kind_)
   {
-    switch (type_)
+    switch (kind_)
     {
-      case value_type::boolean: return data_.v_bool_ == other.data_.v_bool_;
-      case value_type::number_int: return data_.v_int_ == other.data_.v_int_;
-      case value_type::number_uint: return data_.v_uint_ == other.data_.v_uint_;
-      case value_type::number_float: return data_.v_double_ == other.data_.v_double_;
-      case value_type::string: return data_.v_string_ == other.data_.v_string_;
-      case value_type::array: return data_.v_array_ == other.data_.v_array_;
-      case value_type::object: return data_.v_object_ == other.data_.v_object_;
-      case value_type::null: return true;
-      case value_type::error: return true; break;
+      case kind::boolean: return data_.v_bool_ == other.data_.v_bool_;
+      case kind::number_int: return data_.v_int_ == other.data_.v_int_;
+      case kind::number_uint: return data_.v_uint_ == other.data_.v_uint_;
+      case kind::number_float: return data_.v_double_ == other.data_.v_double_;
+      case kind::string: return data_.v_string_ == other.data_.v_string_;
+      case kind::array: return data_.v_array_ == other.data_.v_array_;
+      case kind::object: return data_.v_object_ == other.data_.v_object_;
+      case kind::null: return true;
+      case kind::error: return true; break;
 
       default: break;
     }
@@ -1021,7 +1004,7 @@ void value::emplace_null() noexcept
 value::boolean_t& value::emplace_bool() noexcept
 {
   destory();
-  type_ = value_type::boolean;
+  kind_ = kind::boolean;
   new (&data_.v_bool_) boolean_t(false);
 
   return data_.v_bool_;
@@ -1030,7 +1013,7 @@ value::boolean_t& value::emplace_bool() noexcept
 value::number_int_t& value::emplace_int64() noexcept
 {
   destory();
-  type_ = value_type::number_int;
+  kind_ = kind::number_int;
   new (&data_.v_int_) number_int_t(0);
 
   return data_.v_int_;
@@ -1039,7 +1022,7 @@ value::number_int_t& value::emplace_int64() noexcept
 value::number_uint_t& value::emplace_uint64() noexcept
 {
   destory();
-  type_ = value_type::number_uint;
+  kind_ = kind::number_uint;
   new (&data_.v_uint_) number_uint_t(0);
 
   return data_.v_uint_;
@@ -1048,7 +1031,7 @@ value::number_uint_t& value::emplace_uint64() noexcept
 value::number_float_t& value::emplace_double() noexcept
 {
   destory();
-  type_ = value_type::number_float;
+  kind_ = kind::number_float;
   new (&data_.v_double_) number_float_t(0);
 
   return data_.v_double_;
@@ -1057,7 +1040,7 @@ value::number_float_t& value::emplace_double() noexcept
 value::string_t& value::emplace_string() noexcept
 {
   destory();
-  type_ = value_type::string;
+  kind_ = kind::string;
   new (&data_.v_string_) string_t("");
 
   return data_.v_string_;
@@ -1066,7 +1049,7 @@ value::string_t& value::emplace_string() noexcept
 value::array_t& value::emplace_array() noexcept
 {
   destory();
-  type_ = value_type::array;
+  kind_ = kind::array;
   new (&data_.v_array_) array_t();
 
   return data_.v_array_;
@@ -1075,7 +1058,7 @@ value::array_t& value::emplace_array() noexcept
 value::object_t& value::emplace_object() noexcept
 {
   destory();
-  type_ = value_type::object;
+  kind_ = kind::object;
   new (&data_.v_object_) object_t();
 
   return data_.v_object_;
@@ -1083,15 +1066,15 @@ value::object_t& value::emplace_object() noexcept
 
 void value::clear() noexcept
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::array: data_.v_array_.clear(); break;
-    case value_type::object: data_.v_object_.clear(); break;
-    case value_type::string: data_.v_string_.clear(); break;
-    case value_type::boolean: data_.v_bool_ = false; break;
-    case value_type::number_int: data_.v_int_ = 0; break;
-    case value_type::number_uint: data_.v_uint_ = 0; break;
-    case value_type::number_float: data_.v_double_ = 0.0; break;
+    case kind::array: data_.v_array_.clear(); break;
+    case kind::object: data_.v_object_.clear(); break;
+    case kind::string: data_.v_string_.clear(); break;
+    case kind::boolean: data_.v_bool_ = false; break;
+    case kind::number_int: data_.v_int_ = 0; break;
+    case kind::number_uint: data_.v_uint_ = 0; break;
+    case kind::number_float: data_.v_double_ = 0.0; break;
     default: break;
   }
 }
@@ -1100,17 +1083,17 @@ void value::swap(value& other) noexcept
 {
   if (this == &other) return void();
 
-  if (type() == other.type())
+  if (kind() == other.kind())
   {
-    switch (type_)
+    switch (kind_)
     {
-      case value_type::array: data_.v_array_.swap(other.data_.v_array_); break;
-      case value_type::object: data_.v_object_.swap(other.data_.v_object_); break;
-      case value_type::string: data_.v_string_.swap(other.data_.v_string_); break;
-      case value_type::boolean: std::swap(data_.v_bool_, other.data_.v_bool_); break;
-      case value_type::number_int: std::swap(data_.v_int_, other.data_.v_int_); break;
-      case value_type::number_uint: std::swap(data_.v_uint_, other.data_.v_uint_); break;
-      case value_type::number_float: std::swap(data_.v_double_, other.data_.v_double_); break;
+      case kind::array: data_.v_array_.swap(other.data_.v_array_); break;
+      case kind::object: data_.v_object_.swap(other.data_.v_object_); break;
+      case kind::string: data_.v_string_.swap(other.data_.v_string_); break;
+      case kind::boolean: std::swap(data_.v_bool_, other.data_.v_bool_); break;
+      case kind::number_int: std::swap(data_.v_int_, other.data_.v_int_); break;
+      case kind::number_uint: std::swap(data_.v_uint_, other.data_.v_uint_); break;
+      case kind::number_float: std::swap(data_.v_double_, other.data_.v_double_); break;
       default: break;
     }
 
@@ -1124,7 +1107,7 @@ void value::swap(value& other) noexcept
 
 void value::merge(value& other) noexcept(false)
 {
-  set_type_if_none(value_type::object);
+  set_type_if_none(kind::object);
 
   if (is_object() && other.is_object())
   {
@@ -1137,7 +1120,7 @@ void value::merge(value& other) noexcept(false)
 
 void value::merge(value&& other) noexcept(false)
 {
-  set_type_if_none(value_type::object);
+  set_type_if_none(kind::object);
 
   if (is_object() && other.is_object())
   {
@@ -1232,7 +1215,7 @@ value::iterator value::erase(const_iterator first, const_iterator last) noexcept
 
 void value::push_back(const value& other) noexcept(false)
 {
-  set_type_if_none(value_type::array);
+  set_type_if_none(kind::array);
 
   if (is_array())
   {
@@ -1245,7 +1228,7 @@ void value::push_back(const value& other) noexcept(false)
 
 void value::push_back(value&& other) noexcept(false)
 {
-  set_type_if_none(value_type::array);
+  set_type_if_none(kind::array);
 
   if (is_array())
   {
@@ -1351,36 +1334,36 @@ value::string_t value::dump() const noexcept
 
 void value::destory() noexcept
 {
-  switch (type_)
+  switch (kind_)
   {
-    case value_type::string: data_.v_string_.~string_t(); break;
-    case value_type::number_float: data_.v_double_.~number_float_t(); break;
-    case value_type::number_int: data_.v_int_.~number_int_t(); break;
-    case value_type::number_uint: data_.v_uint_.~number_uint_t(); break;
-    case value_type::boolean: data_.v_bool_.~boolean_t(); break;
-    case value_type::array: data_.v_array_.~array_t(); break;
-    case value_type::object: data_.v_object_.~object_t(); break;
+    case kind::string: data_.v_string_.~string_t(); break;
+    case kind::number_float: data_.v_double_.~number_float_t(); break;
+    case kind::number_int: data_.v_int_.~number_int_t(); break;
+    case kind::number_uint: data_.v_uint_.~number_uint_t(); break;
+    case kind::boolean: data_.v_bool_.~boolean_t(); break;
+    case kind::array: data_.v_array_.~array_t(); break;
+    case kind::object: data_.v_object_.~object_t(); break;
     default: break;
   }
 
-  type_ = value_type::null;
+  kind_ = kind::null;
 }
 
-void value::set_type_if_none(value_type type) noexcept
+void value::set_type_if_none(json::kind kind) noexcept
 {
-  if (type_ != value_type::null) return void();
+  if (kind_ != kind::null) return void();
 
-  type_ = type;
-  switch (type_)
+  kind_ = kind;
+  switch (kind_)
   {
-    case value_type::boolean: new (&data_.v_bool_) bool(false); break;
-    case value_type::string: new (&data_.v_string_) string_t{}; break;
-    case value_type::number_int: new (&data_.v_int_) int64_t(0); break;
-    case value_type::number_uint: new (&data_.v_uint_) uint64_t(0); break;
-    case value_type::number_float: new (&data_.v_double_) number_float_t(0.0); break;
-    case value_type::array: new (&data_.v_array_) array_t{}; break;
-    case value_type::object: new (&data_.v_object_) object_t{}; break;
-    case value_type::error:
+    case kind::boolean: new (&data_.v_bool_) bool(false); break;
+    case kind::string: new (&data_.v_string_) string_t{}; break;
+    case kind::number_int: new (&data_.v_int_) int64_t(0); break;
+    case kind::number_uint: new (&data_.v_uint_) uint64_t(0); break;
+    case kind::number_float: new (&data_.v_double_) number_float_t(0.0); break;
+    case kind::array: new (&data_.v_array_) array_t{}; break;
+    case kind::object: new (&data_.v_object_) object_t{}; break;
+    case kind::error:
       // new (&data_.v_error_) error(other.data_.v_error_);
       break;
 
