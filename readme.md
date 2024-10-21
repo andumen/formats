@@ -13,7 +13,7 @@ The goal of this project is to build a simpler, faster and more user-friendly  p
     * [Parse support](#Parse-support)
   * [stringify](#stringify)
     * [stringify to string](#stringify-to-string)
-    * [stringify to stream](#stringify-to-string)
+    * [stringify to stream](#stringify-to-stream)
     * [stringify support](#stringify-support)
   * [serializer](#serialize/unserialize)
     * [STL](#STL-Container)
