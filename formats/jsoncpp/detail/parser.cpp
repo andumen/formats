@@ -34,7 +34,7 @@ namespace detail
 
 
 #define reach_key_end(c)  (c == c_name_separator)
-#define reach_val_end(c)  (c == c_value_separator || c == c_end_array || c == c_end_object)
+#define reach_val_end(c)  (c == c_value_separator || c == c_array_end || c == c_object_end)
 #define is_white_space(c) (c == c_space || c == c_horizontal_tab || c == c_carriage_return || c == c_line_feed)
 
 #define none_error (error_.code_ == error_code::none)
@@ -123,8 +123,8 @@ bool parser::parse(value& v)
 
   if (skip_space_and_comments())
   {
-    if (*ptr_ == c_begin_object) return parse_object(v);
-    if (*ptr_ == c_begin_array) return parse_array(v);
+    if (*ptr_ == c_object_begin) return parse_object(v);
+    if (*ptr_ == c_array_begin) return parse_array(v);
 
     if (parse_lenient_root)  // JSON5 top level can be a value
     {
@@ -204,7 +204,7 @@ bool parser::parse_object(value& v)
   {
     c = *ptr_;
 
-    if (c == c_end_object) break;
+    if (c == c_object_end) break;
 
     if (likely(c == c_double_quotes))
       parse_object_element(object);
@@ -224,7 +224,7 @@ bool parser::parse_object(value& v)
     skip_multi_bytes(1);
   }
 
-  if (ptr_ < end_ && *ptr_ == c_end_object)
+  if (ptr_ < end_ && *ptr_ == c_object_end)
   {
     if (has_trailing_comma && !parse_object_trailing_comma)
     {
@@ -260,7 +260,7 @@ bool parser::parse_array(value& v)
 
   while (skip_space_and_comments())
   {
-    if (*ptr_ == c_end_array) break;
+    if (*ptr_ == c_array_end) break;
 
     has_trailing_comma = false;
     if (!parse_value(array.emplace_back(nullptr)) || !skip_space_and_comments()) { return false; }
@@ -271,7 +271,7 @@ bool parser::parse_array(value& v)
     skip_multi_bytes(1);
   }
 
-  if (ptr_ < end_ && *ptr_ == c_end_array)
+  if (ptr_ < end_ && *ptr_ == c_array_end)
   {
     if (has_trailing_comma && !parse_array_trailing_comma)
     {
@@ -295,8 +295,8 @@ bool parser::parse_value(value& v)
 {
   unsigned char c = *ptr_;
 
-  if (likely(c == c_begin_object)) return parse_object(v);
-  if (likely(c == c_begin_array)) return parse_array(v);
+  if (likely(c == c_object_begin)) return parse_object(v);
+  if (likely(c == c_array_begin)) return parse_array(v);
   if (likely(c == c_double_quotes)) return parse_value_string(v);
   if (c == c_single_quotes && parse_single_quotes) return parse_value_string(v);
   if (leading_unquoted(c) && parse_unquoted_string) return parse_value_unquoted(v);

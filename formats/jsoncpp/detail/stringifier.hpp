@@ -93,7 +93,7 @@ private:
 
   void write_array(const value& v)
   {
-    o->write(c_begin_array);
+    o->write(c_array_begin);
 
     if (style == stringify_style::pretty) ++depth;
 
@@ -126,12 +126,12 @@ private:
       if (style != stringify_style::compact) o->write(depth << 2, c_space);
     }
 
-    o->write(c_end_array);
+    o->write(c_array_end);
   }
 
   void write_object(const value& v)
   {
-    o->write(c_begin_object);
+    o->write(c_object_begin);
 
     if (style != stringify_style::compact) ++depth;
 
@@ -168,7 +168,7 @@ private:
       }
     }
 
-    o->write(c_end_object);
+    o->write(c_object_end);
   }
 
 private:

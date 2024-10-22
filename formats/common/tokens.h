@@ -12,11 +12,11 @@ enum : unsigned char
   c_carriage_return = 0X0D,  //  '\r'
   c_space           = 0X20,  //  ' '
 
-  c_begin_array = 0X5B,  // '['
-  c_end_array   = 0X5D,  // ']'
+  c_array_begin = 0X5B,  // '['
+  c_array_end   = 0X5D,  // ']'
 
-  c_begin_object = 0X7B,  // '{'
-  c_end_object   = 0X7D,  // '}'
+  c_object_begin = 0X7B,  // '{'
+  c_object_end   = 0X7D,  // '}'
 
   c_name_separator  = 0X3A,  //  ':'
   c_double_quotes   = 0X22,  //  '"'
