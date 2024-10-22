@@ -4,7 +4,7 @@ namespace internal
 {
 
 static std::vector<Legend> legends;
-};  // namespace internal
+}  // namespace internal
 
 void build_custom_data_once()
 {
@@ -13,7 +13,7 @@ void build_custom_data_once()
     Legend legend;
 
     legend.serialno = 1, legend.name = "Garen";
-    legend.proptrty   = {600, 400, 80.0, 10.0, 40.0, 42.0, 335.0, 0.0, 1.5, 0.67};
+    legend.proptrty   = {600, 400, 80.0, 10.0, 40.0, 42.0, 335.0, 0.0, 1.5, 0.67, 30};
     legend.class_type = ClassType::Fighter;
     legend.region     = Region::Demacia;
     legend.position   = Position::TopLaner;

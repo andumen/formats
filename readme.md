@@ -9,21 +9,23 @@ The goal of this project is to build a simpler, faster and more user-friendly  p
   * [CMake Option](#CMake-Option)
 * [Usage](#Usage)
   * [parse](#parse)
-    * [Read from string or file](#Read-from-string-or-file)
-    * [Parse support](#Parse-support)
+    * [read from string or stream](#read-from-string-or-stream)
+    * [load from file](#load-from-file)
+    * [parse support](#parse-support)
   * [stringify](#stringify)
     * [stringify to string](#stringify-to-string)
     * [stringify to stream](#stringify-to-stream)
+    * [dump to file](#dump-to-file)
     * [stringify support](#stringify-support)
   * [serializer](#serialize/unserialize)
     * [STL](#STL-Container)
-    * [Custom Type](#Custom-Type)
+    * [custom type](#custom-type)
   * [json value](#value)
-    * [Types](#DataType-of-Json-Value)
-    * [Construct](#Construct)
-    * [Access](#Access)
-    * [Capacity](#Capacity)
-    * [Modify](#Modify)
+    * [Types](#Json-types)
+    * [construct](#construct)
+    * [access](#access)
+    * [capacity](#capacity)
+    * [modify](#modify)
 * [Compiler Support](#Compiler-Support)
 * [Reference](#Reference)
 
@@ -90,7 +92,7 @@ using namespace formats;
 
 ### parse
 
-#### Read from string or file
+#### read from string or stream
 
 There are three APIs available for use; you can choose according to your needs. 
 
@@ -114,7 +116,7 @@ int main() {
     }
   }
 
-  {  // from file
+  {  // from stream
     std::string file_path("/data/test.json");
     std::ifstream is;
     is.open(file_path, std::ios::in | std::ios::binary);
@@ -126,6 +128,8 @@ int main() {
       }
     }
   }
+    
+  
 
   return 0;
 }
@@ -154,7 +158,7 @@ int main() {
     }
   }
 
-  {  // from file
+  {  // from stream
     std::string file_path("/data/test.json");
     std::ifstream is;
     is.open(file_path, std::ios::in | std::ios::binary);
@@ -198,7 +202,7 @@ int main() {
     }
   }
 
-  {  // from file
+  {  // from stream
     std::string file_path("/data/test.json");
     std::ifstream is;
     is.open(file_path, std::ios::in | std::ios::binary);
@@ -218,7 +222,29 @@ int main() {
 
 
 
-#### Parse support
+#### load from file
+
+***
+
+* `json::load(filepath, json::value&)`: load and parse file content to json value
+
+***
+
+example:
+
+```c++
+std::string filepath = "";
+json::value jv;
+if (!json::load(filepath, jv))
+{
+  printf("Faield. \n File: %s\n", filepath.c_str());
+  return void();
+}
+```
+
+
+
+#### parse support
 
 The default standard which parser use is **ECMA404**, if you want use some extension in your json,  Specify  the flags in parse function. Parse flag is bit-or combination of the possible flags-enum.
 
@@ -320,6 +346,23 @@ std::cout << "json: " << json_value << std::endl;	// standard style
 
 
 
+#### dump to file
+
+***
+
+`void dump(const std::string&, const json::value&, style)`: stringify json value and save to file
+
+***
+
+example:
+
+```c++
+json::value jv;
+json::dump(destfile, jv, json::stringify_style::pretty);
+```
+
+
+
 #### stringify support
 
 Like parse flags, This project also provides stringify flags to select. Stringify flag is bit-or combination of the possible flags-enum. As the third parameter of stringfiy function. The default flag value is strict, corresponding json standards ECMA404.
@@ -347,7 +390,7 @@ enum class stringify_flag : unsigned char
 
 ***
 
-#### STL Container
+#### STL container
 
 example:
 
@@ -374,7 +417,7 @@ json::unserialize(jv4, unordered_map);
 
 
 
-#### Custom Type
+#### custom type
 
 To make serializer work with one of your types, there three ways you can select:
 
@@ -519,7 +562,7 @@ CHECK(jv["age"] == 13);
 
 The value is the core class of the project. This library provides simple access and modification APIs for this class. Next, we will provide a detailed introduction to this category
 
-#### DataType of Json Value
+#### Json types
 
 The following are json data types:
 
@@ -541,15 +584,15 @@ enum class kind : unsigned char
 
 
 
-#### Construct
+#### construct
 
-##### From Json Value Type
+##### from Json value type
 
 ```c++
 json::value json_value = json::kind::array;
 ```
 
-##### From Scaler value
+##### from scaler value
 
 ```c++
 json::value json_value_null = nullptr;
@@ -561,7 +604,7 @@ json::value json_value_str = "";
 
 
 
-##### From Initializelist
+##### from initializelist
 
 ```c++
 json::value jv_array = {false, 1, 2.16, "", nullptr};
@@ -570,7 +613,7 @@ json::value jv_object = {{"one", 1}, {"two", 2}};
 
 
 
-##### From Struct Data(STL)
+##### from struct data(STL)
 
 ```c++
 // to json array value
@@ -615,7 +658,7 @@ json::value jv_object4(unordered_multimap);
 
 
 
-#### Access
+#### access
 
 ##### value accessors
 
@@ -776,7 +819,7 @@ auto keys2 = jv.key_set<std::set<std::string>>();
 
 
 
-#### Capacity
+#### capacity
 
 ***
 
@@ -796,9 +839,9 @@ auto size = jv.size();    // size = 3
 
 
 
-#### Modify
+#### modify
 
-##### Change Value
+##### change value
 
 ***
 
@@ -828,7 +871,7 @@ jv.clear();                       // jv is array
 
 
 
-##### Object Modifier
+##### object modifier
 
 ***
 
@@ -850,7 +893,7 @@ jv.merge(json::value({{"three", 3}}));
 
 
 
-##### Array Modifier
+##### array modifier
 
 ***
 

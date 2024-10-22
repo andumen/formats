@@ -231,8 +231,6 @@ TEST(JsonUnserializer)
     std::vector<uint32_t> result;
     json::unserialize(jv, result);
 
-    constexpr bool caca = detail::is_unmapped_emplace_back_container<std::vector<uint32_t>>::value;
-
     CHECK(jv == json::serialize(result));
   }
 
@@ -361,7 +359,7 @@ struct RoundData {
   std::string match_name;
 };
 
-FORMATS_JSON_SERIALIZE_EX(RoundData, uid, "UID", roundid, "roundid", score, "score", match_name, "match_name");
+FORMATS_JSON_SERIALIZE_EX(RoundData, uid, "UID", roundid, "roundid", score, "score", match_name, "match_name")
 
 struct Student {
   int    age    = 12;
@@ -369,7 +367,7 @@ struct Student {
   double weight = 63.5;
 };
 
-FORMATS_JSON_SERIALIZE(Student, age, height, weight);
+FORMATS_JSON_SERIALIZE(Student, age, height, weight)
 
 TEST(JsonStaticReflection)
 {

@@ -76,7 +76,7 @@ inline std::string toupper(const std::string& s)
 
 inline bool equal(const std::string& s1, const char* s2, int length)
 {
-  if (s1.size() != length) return false;
+  if (length < 0 || (int)s1.size() != length) return false;
 
   while (length-- > 0)
   {

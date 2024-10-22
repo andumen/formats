@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include <formats/common/cctypes.hpp>
-#include <formats/jsoncpp/value.hpp>
 #include <formats/third_party/double-conversion/double-conversion.h>
 #include <formats/third_party/double-conversion/strtod.h>
 

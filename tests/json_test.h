@@ -9,6 +9,10 @@
 #include <formats/formats.h>
 #include "custom_type.hpp"
 
+#ifdef  __GNUC__
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#endif //  __GNUC__
+
 #ifndef TEST
 #define TEST(Name)                                                           \
   static void Test##Name();                                                  \

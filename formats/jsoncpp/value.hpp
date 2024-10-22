@@ -60,11 +60,11 @@ public:
   value() noexcept;
   value(const value& value) noexcept;
   value(value&& value) noexcept;
-  value(kind) noexcept;
+  value(json::kind) noexcept;
 
   template <typename T, typename std::enable_if<std::is_same<T, bool>::value>::type* = nullptr>
   inline value(T val)
-      : kind_(kind::boolean)
+      : kind_(json::kind::boolean)
       , data_(val)
   {}
 
@@ -106,7 +106,7 @@ public:
                               int>::type = 0>
   value(const Pair& pair) noexcept
   {
-    kind_ = kind::object;
+    kind_ = json::kind::object;
     new (&data_.v_object_) object_t();
 
     data_.v_object_.emplace(pair.first, value(pair.second));
@@ -124,7 +124,7 @@ public:
           std::is_constructible<value, typename Container::value_type>::value>::type* = nullptr>
   value(const Container& container) noexcept
   {
-    kind_ = kind::array;
+    kind_ = json::kind::array;
     new (&data_.v_array_) array_t();
 
     for (const typename Container::value_type& element : container)
@@ -145,7 +145,7 @@ public:
           std::is_constructible<value, typename Container::mapped_type>::value>::type* = nullptr>
   value(const Container& container) noexcept
   {
-    kind_ = kind::object;
+    kind_ = json::kind::object;
     new (&data_.v_object_) object_t();
 
     for (const typename Container::value_type& entry : container)
@@ -271,7 +271,7 @@ public:
   string_t       to_string(string_t&& dflt = {}) const noexcept;
 
 public:
-  kind kind() const noexcept;
+  json::kind kind() const noexcept;
 
 public:
   template <
@@ -559,7 +559,7 @@ public:  // Modifier
   template <typename... Args>
   std::pair<iterator, bool> emplace(Args&&... args) noexcept(false)
   {
-    set_type_if_none(kind::object);
+    set_type_if_none(json::kind::object);
     if (is_object())
     {
       auto ret = data_.v_object_.emplace(std::forward<Args&&>(args)...);
@@ -673,7 +673,7 @@ public:  // Modifier
   template <typename... Args>
   reference emplace_back(Args&&... args) noexcept(false)
   {
-    set_type_if_none(kind::array);
+    set_type_if_none(json::kind::array);
 
     if (is_array()) { return data_.v_array_.emplace_back(std::forward<Args&&>(args)...); }
 
@@ -737,7 +737,7 @@ private:
   string_t type_name() const noexcept;
 
 private:
-  json::kind kind_ = kind::null;
+  json::kind kind_ = json::kind::null;
 
 protected:
   union json_data {

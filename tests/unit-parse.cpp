@@ -57,68 +57,30 @@ TEST(JsonValueParseFromString)
 
 TEST(JsonValueParseFromFile)
 {
-  std::string filepath  = "";
-  std::string dest_file = "";
+  std::string filepath = "";
+  std::string destfile = "";
 
-  std::ifstream is;
-  is.open(filepath, std::ios::in | std::ios::binary);
-
-  if (is.is_open())
+  json::value jv;
+  if (!json::load(filepath, jv))
   {
-    formats::json::parse_flag parse_flag = formats::json::parse_flag::strict;
-    formats::json::error      json_error;
-    formats::json::value      json_value = formats::json::parse(is, json_error, parse_flag);
-
-    if (json_error.code() != formats::json::error_code::none)
-    {
-      printf("Faield. \n File: %s\n error:%s\n", filepath.c_str(), json_error.what());
-
-      return;
-    }
-
-    auto json_string = formats::json::stringify(json_value, formats::json::stringify_style::pretty);
-
-    // write
-    std::ofstream out;
-    out.open(dest_file, std::ios::out | std::ios::binary);
-    if (out.is_open())
-    {
-      out << json_string;
-      out.close();
-    }
+    printf("Faield. \n File: %s\n", filepath.c_str());
+    return void();
   }
+
+  json::dump(destfile, jv, json::stringify_style::pretty);
 }
 
 TEST(JsonValueParseFromJson5File)
 {
-  std::string filepath  = "";
-  std::string dest_file = "";
+  std::string filepath = "";
+  std::string destfile = "";
 
-  std::ifstream is;
-  is.open(filepath, std::ios::in | std::ios::binary);
-
-  if (is.is_open())
+  json::value jv;
+  if (!json::load(filepath, jv, json::parse_flag::JSON5))
   {
-    formats::json::parse_flag parse_flag = formats::json::parse_flag::JSON5;
-    formats::json::error      json_error;
-    formats::json::value      json_value = formats::json::parse(is, json_error, parse_flag);
-
-    if (json_error.code() != formats::json::error_code::none)
-    {
-      printf("Faield. \n File: %s\n error:%s\n", filepath.c_str(), json_error.what());
-
-      return;
-    }
-
-    auto json_string = formats::json::stringify(json_value, formats::json::stringify_style::pretty);
-
-    // write
-    std::ofstream out;
-    out.open(dest_file, std::ios::out | std::ios::binary);
-    if (out.is_open())
-    {
-      out << json_string;
-      out.close();
-    }
+    printf("Faield. \n File: %s\n", filepath.c_str());
+    return void();
   }
+
+  json::dump(destfile, jv, json::stringify_style::pretty);
 }

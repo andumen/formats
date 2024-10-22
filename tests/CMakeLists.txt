@@ -8,7 +8,7 @@ FILE(GLOB_RECURSE tests_files ${FORMATS_TEST_SOURCE_DIR} "*.hpp" "*.h" "*.cpp" "
 
 add_executable(${PROJECT_NAME} ${tests_files})
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17) 
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "formats" output_name "${PROJECT_NAME}")
 

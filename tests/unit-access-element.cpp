@@ -19,11 +19,6 @@ TEST(JsonValueAccessObjectAt)
     legend_copy.region     = (Region)jv.at(std::string("Region")).to_uint64();
     legend_copy.position   = (Position)jv.at(std::string("Position")).to_uint64();
 
-    constexpr bool sxac = detail::is_unmapped_emplace_back_container_v<std::vector<std::string>>;
-    constexpr bool sxad = detail::is_unmapped_emplace_container_v<std::vector<std::string>>;
-
-    auto ascac = jv.key_set<std::vector<std::string>>();
-
     CHECK_EQ(jv.size(), jv.key_set<std::vector<std::string>>().size());
     CHECK_EQ(legend_copy.serialno, legend_obj->serialno);
     CHECK_EQ(legend_copy.name.c_str(), legend_obj->name.c_str());

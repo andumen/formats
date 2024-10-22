@@ -33,7 +33,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${FORMATS_INCLDE_DIR})
 if("${CMAKE_GENERATOR}" STREQUAL "Xcode")
     target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 endif()
-
+ 
 if(WITH_TESTS)
 	list(APPEND CMAKE_MODULE_PATH "${FORMATS_CMAKE_DIR}")
 	add_subdirectory(tests)

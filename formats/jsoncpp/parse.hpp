@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <istream>
+#include <fstream>
 
 #include <formats/jsoncpp/value.hpp>
 #include <formats/jsoncpp/flags.h>
@@ -63,5 +63,17 @@ value parse(const char* data, error& error, parse_flag flag = parse_flag::strict
 value parse(const char* begin, const char* end, error& error, parse_flag flag = parse_flag::strict);
 value parse(const char* begin, std::size_t len, error& error, parse_flag flag = parse_flag::strict);
 value parse(std::istream& is, error& error, parse_flag flag = parse_flag::strict);
+
+/*
+ * @brief: Parse a json value from file.
+ *
+ * @param:
+ *  filepath: the absolute path of the file to load.
+ *  value: the reference of the value parse to.
+ *  parse_flag: bit-or combination of the possible flags-enum.
+ *
+ * @return: true if parse success, otherwise false.
+ */
+bool load(const std::string& filepath, json::value& value, parse_flag flag = parse_flag::strict);
 
 FORMATS_JSON_NAMESPACE_END

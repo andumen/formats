@@ -167,7 +167,7 @@ struct serializer<T,
   }
 };
 
-};  // namespace impl
+}  // namespace impl
 
 template <typename T>
 void unserialize(const value& js, T& t)

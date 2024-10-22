@@ -17,14 +17,14 @@ bool parse(value& jv, const char* begin, const char* end, parse_flag flag)
   error err;
   jv = parse(begin, end, err, flag);
 
-  return (jv.kind() == json::kind::error);
+  return (jv.kind() != json::kind::error);
 }
 
 bool parse(value& jv, const char* begin, std::size_t len, parse_flag flag)
 {
   jv = parse(begin, begin + len, flag);
 
-  return (jv.kind() == json::kind::error);
+  return (jv.kind() != json::kind::error);
 }
 
 bool parse(value& jv, std::istream& is, parse_flag flag)
@@ -32,7 +32,7 @@ bool parse(value& jv, std::istream& is, parse_flag flag)
   error err;
   jv = parse(is, err, flag);
 
-  return (jv.kind() == json::kind::error);
+  return (jv.kind() != json::kind::error);
 }
 
 value parse(const char* data, parse_flag flag)
@@ -97,6 +97,22 @@ value parse(std::istream& is, error& error, parse_flag flag)
   if (is.bad() || is.eof()) return v;
 
   return formats::json::detail::parser().parse(is, error, flag);
+}
+
+bool load(const std::string& filepath, json::value& value, parse_flag flag)
+{
+  bool result = false;
+
+  std::ifstream is;
+  is.open(filepath, std::ios::in | std::ios::binary);
+
+  if (is.is_open())
+  {
+    result = formats::json::parse(value, is, flag);
+    is.close();
+  }
+
+  return result;
 }
 
 FORMATS_JSON_NAMESPACE_END
