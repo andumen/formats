@@ -98,8 +98,6 @@ private:
   int depth_ = 0;
 
   parse_flag flag = parse_flag::ECMA404;
-
-  int feed_count = 0;
 };
 
 }  // namespace detail

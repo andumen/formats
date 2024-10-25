@@ -1077,8 +1077,6 @@ bool parser::eof()
 
 void parser::feed()
 {
-  feed_count++;
-
   auto data_size = end_ - begin_;
 
   if (begin_ == is_buf_.get())
