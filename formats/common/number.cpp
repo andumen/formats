@@ -8,7 +8,7 @@
 
 namespace dcvt = double_conversion;
 
-FORMATS_JSON_NAMESPACE_BEGIN
+FORMATS_NAMESPACE_BEGIN
 
 template <typename T, bool fix_overflow>
 T stoi(const std::string& str, int base, int& bytes_trans)
@@ -301,4 +301,4 @@ std::pair<double, bool> strtod(const std::string& str)
   return {result, processed != 0};
 }
 
-FORMATS_JSON_NAMESPACE_END
+FORMATS_NAMESPACE_END

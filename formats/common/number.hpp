@@ -4,7 +4,7 @@
 #include <limits>
 #include <formats/common/marco.hpp>
 
-FORMATS_JSON_NAMESPACE_BEGIN
+FORMATS_NAMESPACE_BEGIN
 
 #define DEF(type, name)                                                                   \
   constexpr type name[] = {F(2),  F(3),  F(4),  F(5),  F(6),  F(7),  F(8),  F(9),  F(10), \
@@ -84,4 +84,4 @@ std::pair<double, bool>             strtod(const std::string& str);
 bool                                dtoa(double v, char* buffer, int& size);
 std::string                         dtoa(double v);
 
-FORMATS_JSON_NAMESPACE_END
+FORMATS_NAMESPACE_END
