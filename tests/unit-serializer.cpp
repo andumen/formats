@@ -43,19 +43,19 @@ TEST(JsonSerializer)
   {
     json::value jv;
 
-    jv = json::serialize(nullptr);
+    jv = json::to_json(nullptr);
     CHECK(jv == nullptr);
 
-    jv = json::serialize(1);
+    jv = json::to_json(1);
     CHECK(jv == 1);
 
-    jv = json::serialize(3.14);
+    jv = json::to_json(3.14);
     CHECK(jv == 3.14);
 
-    jv = json::serialize("i love coffee");
+    jv = json::to_json("i love coffee");
     CHECK(jv == "i love coffee");
 
-    jv = json::serialize(false);
+    jv = json::to_json(false);
     CHECK(jv == false);
   }
 
@@ -63,7 +63,7 @@ TEST(JsonSerializer)
   {
     std::array<int, 3> container = {1, 2, 3};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({1, 2, 3});
 
     CHECK(jv1 == jv2);
@@ -73,7 +73,7 @@ TEST(JsonSerializer)
   {
     std::vector<uint64_t> container = {1, 2, 3};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({1, 2, 3});
 
     CHECK(jv1 == jv2);
@@ -83,7 +83,7 @@ TEST(JsonSerializer)
   {
     std::list<std::string> container = {"A", "B", "C"};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({"A", "B", "C"});
 
     CHECK(jv1 == jv2);
@@ -93,7 +93,7 @@ TEST(JsonSerializer)
   {
     std::deque<bool> container = {true, true, false};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({true, true, false});
 
     CHECK(jv1 == jv2);
@@ -106,7 +106,7 @@ TEST(JsonSerializer)
 
     std::forward_list<Legend> container = {*legend_obj1, *legend_obj2};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({*legend_obj1, *legend_obj2});
 
     CHECK(jv1 == jv2);
@@ -116,7 +116,7 @@ TEST(JsonSerializer)
   {
     std::set<int> container = {1, 2, 3};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({1, 2, 3});
 
     CHECK(jv1 == jv2);
@@ -126,7 +126,7 @@ TEST(JsonSerializer)
   {
     std::multiset<int> container = {1, 2, 3};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({1, 2, 3});
 
     CHECK(jv1 == jv2);
@@ -136,7 +136,7 @@ TEST(JsonSerializer)
   {
     std::unordered_set<int> container = {1, 2, 3};
 
-    json::value jv = json::serialize(container);
+    json::value jv = json::to_json(container);
 
     CHECK(jv.size() == 3);
   }
@@ -145,7 +145,7 @@ TEST(JsonSerializer)
   {
     std::unordered_multiset<int> container = {1, 2, 3};
 
-    json::value jv = json::serialize(container);
+    json::value jv = json::to_json(container);
 
     CHECK(jv.size() == 3);
   }
@@ -157,7 +157,7 @@ TEST(JsonSerializer)
 
     std::map<std::string, Legend> container = {{"Kayle", *legend_obj1}, {"Neeko", *legend_obj2}};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({{"Kayle", *legend_obj1}, {"Neeko", *legend_obj2}});
 
     CHECK(jv1 == jv2);
@@ -171,7 +171,7 @@ TEST(JsonSerializer)
     std::multimap<std::string, Legend> container = {{"Kayle", *legend_obj1},
                                                     {"Neeko", *legend_obj2}};
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({{"Kayle", *legend_obj1}, {"Neeko", *legend_obj2}});
 
     CHECK(jv1 == jv2);
@@ -185,7 +185,7 @@ TEST(JsonSerializer)
     std::unordered_map<std::string, Legend> container = {{"Kayle", *legend_obj1},
                                                          {"Neeko", *legend_obj2}};
 
-    json::value jv = json::serialize(container);
+    json::value jv = json::to_json(container);
     CHECK(jv.size() == 2);
   }
 
@@ -197,7 +197,7 @@ TEST(JsonSerializer)
     std::unordered_multimap<std::string, Legend> container = {{"Kayle", *legend_obj1},
                                                               {"Neeko", *legend_obj2}};
 
-    json::value jv = json::serialize(container);
+    json::value jv = json::to_json(container);
     CHECK(jv.size() == 2);
   }
 
@@ -205,7 +205,7 @@ TEST(JsonSerializer)
   {
     TraversableContainer<uint64_t> container(std::vector<uint64_t>{100, 20, 30});
 
-    json::value jv1 = json::serialize(container);
+    json::value jv1 = json::to_json(container);
     json::value jv2 = json::value({100, 20, 30});
 
     CHECK(jv1 == jv2);
@@ -215,7 +215,7 @@ TEST(JsonSerializer)
   {
     auto legend_obj1 = legend(0);
 
-    json::value jv1 = json::serialize(*legend_obj1);
+    json::value jv1 = json::to_json(*legend_obj1);
     json::value jv2 = legend_obj1->to_json();
 
     CHECK(jv1 == jv2);
@@ -229,9 +229,9 @@ TEST(JsonUnserializer)
     json::value jv = {1, 2, 3};
 
     std::vector<uint32_t> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
-    CHECK(jv == json::serialize(result));
+    CHECK(jv == json::to_json(result));
   }
 
   // serailize to list
@@ -239,9 +239,9 @@ TEST(JsonUnserializer)
     json::value jv = {-1.0, 2.3, 3.14};
 
     std::list<double> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
-    CHECK(jv == json::serialize(result));
+    CHECK(jv == json::to_json(result));
   }
 
   // serailize to set
@@ -249,9 +249,9 @@ TEST(JsonUnserializer)
     json::value jv = {1, 2, 3};
 
     std::set<int> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
-    CHECK(jv == json::serialize(result));
+    CHECK(jv == json::to_json(result));
   }
 
   // serailize to set
@@ -259,9 +259,9 @@ TEST(JsonUnserializer)
     json::value jv = {1, 2, 3};
 
     std::multiset<int> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
-    CHECK(jv == json::serialize(result));
+    CHECK(jv == json::to_json(result));
   }
 
   // serailize to unordered_set
@@ -269,7 +269,7 @@ TEST(JsonUnserializer)
     json::value jv = {1, 2, 3};
 
     std::unordered_set<int> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
     CHECK(result.size() == 3);
   }
@@ -279,7 +279,7 @@ TEST(JsonUnserializer)
     json::value jv = {1, 2, 3};
 
     std::unordered_multiset<int> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
     CHECK(result.size() == 3);
   }
@@ -292,10 +292,10 @@ TEST(JsonUnserializer)
     json::value jv = {{"Kayle", *legend_obj1}, {"Neeko", *legend_obj2}};
 
     std::map<std::string, Legend> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
     CHECK(result.size() == 2);
-    CHECK(jv == json::serialize(result));
+    CHECK(jv == json::to_json(result));
   }
 
   // serailize to multimap
@@ -306,9 +306,9 @@ TEST(JsonUnserializer)
     json::value jv = {{"Kayle", *legend_obj1}, {"Neeko", *legend_obj2}};
 
     std::multimap<std::string, Legend> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
-    CHECK(jv == json::serialize(result));
+    CHECK(jv == json::to_json(result));
   }
 
   // serailize to unordered_map
@@ -319,7 +319,7 @@ TEST(JsonUnserializer)
     json::value jv = {{"Kayle", *legend_obj1}, {"Neeko", *legend_obj2}};
 
     std::unordered_map<std::string, Legend> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
     CHECK(result.size() == 2);
   }
@@ -332,7 +332,7 @@ TEST(JsonUnserializer)
     json::value jv = {{"Kayle", *legend_obj1}, {"Neeko", *legend_obj2}};
 
     std::unordered_multimap<std::string, Legend> result;
-    json::unserialize(jv, result);
+    json::from_json(jv, result);
 
     CHECK(result.size() == 2);
   }
@@ -344,8 +344,8 @@ TEST(JsonUnserializer)
     json::value jv = *legend_obj1;
 
     Legend result;
-    json::unserialize(jv, result);
-    CHECK(jv == json::serialize(result));
+    json::from_json(jv, result);
+    CHECK(jv == json::to_json(result));
   }
 }
 
@@ -375,7 +375,7 @@ TEST(JsonStaticReflection)
     RoundData round_data;
     round_data.uid = 1000;
 
-    json::value jv = json::serialize(round_data);
+    json::value jv = json::to_json(round_data);
 
     CHECK(jv["UID"] == 1000);
   }
@@ -384,7 +384,7 @@ TEST(JsonStaticReflection)
     Student student;
     student.age = 13;
 
-    json::value jv = json::serialize(student);
+    json::value jv = json::to_json(student);
 
     CHECK(jv["age"] == 13);
   }

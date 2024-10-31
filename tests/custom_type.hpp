@@ -85,7 +85,7 @@ struct Legend {
   {
     return {
         {"No", serialno},   {"Name", name},         {"ClassType", class_type},
-        {"Region", region}, {"Position", position}, {"Proptrty", json::serialize(proptrty)},
+        {"Region", region}, {"Position", position}, {"Proptrty", json::to_json(proptrty)},
     };
   }
 
@@ -97,7 +97,7 @@ struct Legend {
     this->region     = jv.get("Region", Region::Bilgewater);
     this->position   = jv.get("Position", Position::TopLaner);
 
-    json::unserialize(jv["Proptrty"], this->proptrty);
+    json::from_json(jv["Proptrty"], this->proptrty);
   }
 };
 
@@ -117,7 +117,7 @@ struct formats::adl_serializer<Equipment> {
         {"Name", equipment.name},
         {"Desc", equipment.desc},
         {"ClassType", equipment.class_type},
-        {"Property", json::serialize(equipment.property)},
+        {"Property", json::to_json(equipment.property)},
     };
   };
 
@@ -126,7 +126,8 @@ struct formats::adl_serializer<Equipment> {
     equipment.name       = js.get("Name", equipment.name);
     equipment.desc       = js.get("Desc", equipment.desc);
     equipment.class_type = js.get("ClassType", equipment.class_type);
-    json::unserialize(js["Property"], equipment.property);
+
+    json::from_json(js["Property"], equipment.property);
   }
 };
 

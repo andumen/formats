@@ -385,8 +385,8 @@ enum class stringify_flag : unsigned char
 
 ***
 
-* `serialize`: serialize specified type value to json value
-* `unserialize`: unserialize a json value to specified type
+* `to_json`: serialize specified type value to json value
+* `from_json`: unserialize a json value to specified type
 
 ***
 
@@ -395,22 +395,22 @@ enum class stringify_flag : unsigned char
 example:
 
 ```c++
-json::value jv1 = json::serialize(std::vector<bool>({ false, true, true }));
-json::value jv2 = json::serialize(std::list<int>({ 1, -2, -3, 4 }));
-json::value jv3 = json::serialize(std::set<int>({ 1, -2, -3, 4 }));
-json::value jv4 = json::serialize(std::map<std::string, int>({ {"Aatrox", 0}, {"Fizz", 1} }));
+json::value jv1 = json::to_json(std::vector<bool>({ false, true, true }));
+json::value jv2 = json::to_json(std::list<int>({ 1, -2, -3, 4 }));
+json::value jv3 = json::to_json(std::set<int>({ 1, -2, -3, 4 }));
+json::value jv4 = json::to_json(std::map<std::string, int>({ {"Aatrox", 0}, {"Fizz", 1} }));
 
 std::vector<bool> vector;
-json::unserialize(jv1, vector);
+json::from_json(jv1, vector);
 
 std::deque<int> deque;
-json::unserialize(jv2, deque);
+json::from_json(jv2, deque);
 
 std::unordered_set<int> unordered_set;
-json::unserialize(jv3, unordered_set);
+json::from_json(jv3, unordered_set);
 
 std::unordered_map<std::string, int> unordered_map;
-json::unserialize(jv4, unordered_map);
+json::from_json(jv4, unordered_map);
 
 // multiset multimap... 
 ```
@@ -441,7 +441,7 @@ struct Legend {
   {
     return {
         {"No", serialno},   {"Name", name},         {"ClassType", class_type},
-        {"Region", region}, {"Position", position}, {"Proptrty", json::serialize(proptrty)},
+        {"Region", region}, {"Position", position}, {"Proptrty", json::to_json(proptrty)},
     };
   }
 
@@ -453,13 +453,13 @@ struct Legend {
     this->region     = jv.get("Region", Region::Bilgewater);
     this->position   = jv.get("Position", Position::TopLaner);
 
-    json::unserialize(jv["Proptrty"], this->proptrty);
+    json::from_json(jv["Proptrty"], this->proptrty);
   }
 };
 
 Legend legend;
-json::value jv = json::serialize(legend);
-json::unserialize(jv, legend);
+json::value jv = json::to_json(legend);
+json::from_json(jv, legend);
 ```
 
 **2. Specialization adl_serializer<T>**
@@ -485,7 +485,7 @@ struct formats::adl_serializer<Equipment> {
         {"Name", equipment.name},
         {"Desc", equipment.desc},
         {"ClassType", equipment.class_type},
-        {"Property", json::serialize(equipment.property)},
+        {"Property", json::to_json(equipment.property)},
     };
   };
 
@@ -494,13 +494,13 @@ struct formats::adl_serializer<Equipment> {
     equipment.name       = js.get("Name", equipment.name);
     equipment.desc       = js.get("Desc", equipment.desc);
     equipment.class_type = js.get("ClassType", equipment.class_type);
-    json::unserialize(js["Property"], equipment.property);
+    json::from_json(js["Property"], equipment.property);
   }
 };
 
 Equipment equipment;
-json::value jv = json::serialize(equipment);
-json::unserialize(jv, equipment);
+json::value jv = json::to_json(equipment);
+json::from_json(jv, equipment);
 ```
 
 **3. Reflection with marco**
@@ -537,7 +537,7 @@ FORMATS_JSON_SERIALIZE_EX(RoundData, uid, "UID", roundid, "roundid", score, "sco
 
 RoundData round_data;
 round_data.uid = 1000;
-json::value jv = json::serialize(round_data);
+json::value jv = json::to_json(round_data);
 CHECK(jv["UID"] == 1000);
 
 struct Student {
@@ -550,7 +550,7 @@ struct Student {
 FORMATS_JSON_SERIALIZE(Student, age, height, weight);
 Student student;
 student.age = 13;
-json::value jv = json::serialize(student);
+json::value jv = json::to_json(student);
 CHECK(jv["age"] == 13);
 ```
 

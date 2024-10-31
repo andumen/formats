@@ -8,10 +8,10 @@
 FORMATS_JSON_NAMESPACE_BEGIN
 
 template <typename T>
-void unserialize(const value& js, T& t);
+void from_json(const value& js, T& t);
 
 template <typename T>
-value serialize(const T& t);
+value to_json(const T& t);
 
 namespace impl
 {
@@ -170,13 +170,13 @@ struct serializer<T,
 }  // namespace impl
 
 template <typename T>
-void unserialize(const value& js, T& t)
+void from_json(const value& js, T& t)
 {
   impl::unserializer<T>::from_json(js, t);
 }
 
 template <typename T>
-value serialize(const T& t)
+value to_json(const T& t)
 {
   return impl::serializer<T>::to_json(t);
 }
@@ -196,7 +196,7 @@ FORMATS_JSON_NAMESPACE_END
     inline static void from_json(const json::value& v, Struct& t)                             \
     {                                                                                         \
       formats::ForEachField(t, [&v](auto&& field, auto&& name) {                              \
-        if (v.contains(name)) formats::json::unserialize(v[name], field);                     \
+        if (v.contains(name)) formats::json::from_json(v[name], field);                       \
       });                                                                                     \
     }                                                                                         \
   };
@@ -214,7 +214,7 @@ FORMATS_JSON_NAMESPACE_END
     inline static void from_json(const json::value& v, Struct& t)                     \
     {                                                                                 \
       formats::ForEachField(t, [&v](auto&& field, auto&& name) {                      \
-        if (v.contains(name)) formats::json::unserialize(v[name], field);             \
+        if (v.contains(name)) formats::json::from_json(v[name], field);               \
       });                                                                             \
     }                                                                                 \
   };
