@@ -122,8 +122,11 @@ private:
 
     if (!v.empty())
     {
-      if (style == stringify_style::pretty) o->write(c_line_feed);
-      if (style != stringify_style::compact) o->write(depth << 2, c_space);
+      if (style == stringify_style::pretty)
+      {
+        o->write(c_line_feed);
+        o->write(depth << 2, c_space);
+      }
     }
 
     o->write(c_array_end);
