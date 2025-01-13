@@ -9,6 +9,8 @@ SET(FORMATS_CMAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(${FORMATS_CMAKE_DIR}/auto_source_group.cmake)
 include(${FORMATS_CMAKE_DIR}/compile_option.cmake)
 
+list(APPEND CMAKE_MODULE_PATH "${FORMATS_CMAKE_DIR}")
+
 SET(FORMATS_MESSAGE "Formats: ")
 
 if(POLICY CMP0091)
@@ -35,6 +37,5 @@ if("${CMAKE_GENERATOR}" STREQUAL "Xcode")
 endif()
  
 if(WITH_TESTS)
-	list(APPEND CMAKE_MODULE_PATH "${FORMATS_CMAKE_DIR}")
 	add_subdirectory(tests)
 endif()

@@ -644,8 +644,8 @@ value::number_int_t value::to_int64(value::number_int_t dflt) const noexcept
                  : dflt;
 
     case kind::number_float:
-      return (data_.v_double_ >= (std::numeric_limits<number_int_t>::min)() &&
-              data_.v_double_ <= (std::numeric_limits<number_int_t>::max)())
+      return (data_.v_double_ >= (number_float_t)(std::numeric_limits<number_int_t>::min)() &&
+              data_.v_double_ <= (number_float_t)(std::numeric_limits<number_int_t>::max)())
                  ? (number_int_t)data_.v_double_
                  : dflt;
 
@@ -669,7 +669,7 @@ value::number_uint_t value::to_uint64(value::number_uint_t dflt) const noexcept
     case kind::number_int: return data_.v_int_ >= 0 ? (number_uint_t)data_.v_int_ : dflt;
     case kind::number_float:
       return (data_.v_double_ >= 0.0 &&
-              data_.v_double_ <= (std::numeric_limits<number_uint_t>::max)())
+              data_.v_double_ <= (number_float_t)(std::numeric_limits<number_uint_t>::max)())
                  ? (number_uint_t)data_.v_double_
                  : dflt;
 
